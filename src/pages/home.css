@@ -1,8 +1,14 @@
 .filters{
     margin-block: 30px;
+    margin-bottom: -20px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+
+.subButton{
+    display: flex;
+    justify-content: flex-end;
 }
 
 .dataTable{
