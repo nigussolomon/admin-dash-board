@@ -1,172 +1,83 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: "2020-01-05",
-        trainingTitle: "11091700",
-      },
-      {
-        date: "2020-01-02",
-        trainingTitle: "Anonymous",
-      },
-    ],
-  };
-}
-
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.calories}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.fat}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.carbs}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.protein}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography sx={{fontFamily: 'var(--font)'}} variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{fontFamily: 'var(--font)'}}>Date</TableCell>
-                    <TableCell sx={{fontFamily: 'var(--font)'}} align="right">Training Title</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow sx={{fontFamily: 'var(--font)'}} key={historyRow.date}>
-                      <TableCell sx={{fontFamily: 'var(--font)'}} component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-
-                      <TableCell sx={{fontFamily: 'var(--font)'}} align="right">
-                        {historyRow.trainingTitle}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
-
-const rows = [
-  createData(
-    "Nigus Solomon",
-    "nigus.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
-  createData(
-    "Hemen Solomon",
-    "hemen.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
-  createData(
-    "Eyosias Mekbib",
-    "nigus.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
-  createData(
-    "Hemen Solomon",
-    "hemen.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
-  createData(
-    "Nigus Solomon",
-    "nigus.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
-  createData(
-    "Hemen Solomon",
-    "hemen.solomon@mks.com",
-    "Software Engineering",
-    "Addis Ababa",
-    "Bole"
-  ),
+const columns = [
+  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'email', label: 'Email', minWidth: 100 },
+  { id: 'department', label: 'Department', minWidth: 170, },
+  { id: 'region', label: 'Region', minWidth: 170, },
+  { id: 'trainingTitle', label: 'Training Title', minWidth: 170, },
+  { id: 'date', label: 'Date', minWidth: 170, },
 ];
 
-export default function DataTable() {
+export default function StickyHeadTable({rows}) {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow sx={{ backgroundColor: "var(--primary-color)" }}>
-            <TableCell />
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>TRAINEE NAME</TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
-              EMAIL
-            </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
-              DEPARTMENT
-            </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
-              REGION
-            </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
-              BRANCH
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  style={{backgroundColor: 'var(--primary-color)', color: 'var(--white)', fontFamily: 'var(--font)', fontWeight: 'bold', minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
+                return (
+                  <TableRow sx={{fontFamily: 'var(--font)',}} hover role="checkbox" tabIndex={-1} key={row.code}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell sx={{fontFamily: 'var(--font)',}} key={column.id} align={column.align}>
+                          {column.format && typeof value === 'number'
+                            ? column.format(value)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+				labelRowsPerPage="Rows"
+        rowsPerPageOptions={[5, 15, 25]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
   );
 }
