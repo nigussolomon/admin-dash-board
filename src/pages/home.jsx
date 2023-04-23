@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DataTable from "../components/table/table";
+import Divider from '@mui/material/Divider';
 
 function createData(name, email, department, region, trainingTitle, date) {
   return { name, email, department, region, trainingTitle, date };
@@ -71,13 +72,27 @@ const currencies = [
 export default function Home() {
   const [rows, setRows] = useState([]);
   const [index,  setIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(false);
   function populate(){
     if (index < samples.length) {
+      setDisable(true);
+      setLoading(true);
       setRows(samples[index]);
       setIndex(index + 1);
+      setTimeout(() => {
+        setLoading(false);
+        setDisable(false);
+      }, 1000);
     } else {
+      setDisable(true);
+      setLoading(true);
       setIndex(1)
       setRows(samples[0]);
+      setTimeout(() => {
+          setLoading(false);
+          setDisable(false);
+        }, 1000);
     }
       
     
@@ -93,6 +108,7 @@ export default function Home() {
       <NavBar />
       <Container maxWidth="xl">
         <h1>TRAINING NEED ASSESMENT </h1>
+        <Divider/>
         <div className="filters">
           <TextField
             sx={textStyle}
@@ -150,15 +166,16 @@ export default function Home() {
           </LocalizationProvider>
         </div>
         <div className="subButton">
-          <Button onClick={clear}  sx={{padding: "12px", minWidth: "180px",}} variant="contained" color="error" endIcon={<ClearIcon/>}>CLEAR</Button>
+          <Button disabled={disable} onClick={clear}  sx={{padding: "12px", minWidth: "180px",}} variant="contained" color="error" endIcon={<ClearIcon/>}>CLEAR</Button>
           <div className="space"></div>
-          <Button onClick={populate} sx={{padding: "12px", minWidth: "180px",}} variant="contained" color="success" endIcon={<FilterListIcon/>}>FILTER</Button>
+          <Button disabled={disable} onClick={populate} sx={{padding: "12px", minWidth: "180px",}} variant="contained" color="success" endIcon={<FilterListIcon/>}>FILTER</Button>
         </div>
       </Container>
       <Container maxWidth="xl">
+      <Divider/>
         <div className="dataTable">
           <h2>TRAINEE LIST</h2>
-          <DataTable rows={rows}></DataTable>
+          <DataTable rows={rows} loading={loading}></DataTable>
         </div>
       </Container>
     </div>
