@@ -1,6 +1,6 @@
 import React from "react";
 import "./home.css";
-import "../variables.css";
+import "../assets/variables.css";
 import NavBar from "../components/navBar/navBar";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";

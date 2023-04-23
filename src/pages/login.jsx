@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo_alt from '../logo_alt.svg';
+import logo_alt from '../assets/logo_alt.svg';
 import { TextField, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 

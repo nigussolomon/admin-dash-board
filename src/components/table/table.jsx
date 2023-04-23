@@ -116,6 +116,27 @@ const rows = [
     "Addis Ababa",
     "Bole"
   ),
+  createData(
+    "Hemen Solomon",
+    "hemen.solomon@mks.com",
+    "Software Engineering",
+    "Addis Ababa",
+    "Bole"
+  ),
+  createData(
+    "Nigus Solomon",
+    "nigus.solomon@mks.com",
+    "Software Engineering",
+    "Addis Ababa",
+    "Bole"
+  ),
+  createData(
+    "Hemen Solomon",
+    "hemen.solomon@mks.com",
+    "Software Engineering",
+    "Addis Ababa",
+    "Bole"
+  ),
 ];
 
 export default function DataTable() {
