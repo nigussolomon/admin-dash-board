@@ -1,0 +1,6 @@
+@import '../../variables.css';
+
+.logo img{
+    width: 125px;
+    height: 70px;
+}

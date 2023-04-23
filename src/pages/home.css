@@ -1,0 +1,10 @@
+.filters{
+    margin-block: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.dataTable{
+    margin-bottom: 50px;
+}
