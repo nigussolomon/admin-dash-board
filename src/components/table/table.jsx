@@ -53,33 +53,33 @@ function Row(props) {
         <TableCell sx={{fontFamily: 'var(--font)'}} component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} align="right">{row.calories}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} align="right">{row.fat}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} align="right">{row.carbs}</TableCell>
-        <TableCell sx={{fontFamily: 'var(--font)'}} align="right">{row.protein}</TableCell>
+        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.calories}</TableCell>
+        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.fat}</TableCell>
+        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.carbs}</TableCell>
+        <TableCell sx={{fontFamily: 'var(--font)'}} >{row.protein}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography sx={{fontFamily: 'var(--font)'}} variant="h6" gutterBottom component="div">
                 History
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell align="right">Training Title</TableCell>
+                    <TableCell sx={{fontFamily: 'var(--font)'}}>Date</TableCell>
+                    <TableCell sx={{fontFamily: 'var(--font)'}} align="right">Training Title</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
+                    <TableRow sx={{fontFamily: 'var(--font)'}} key={historyRow.date}>
+                      <TableCell sx={{fontFamily: 'var(--font)'}} component="th" scope="row">
                         {historyRow.date}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell sx={{fontFamily: 'var(--font)'}} align="right">
                         {historyRow.trainingTitle}
                       </TableCell>
                     </TableRow>
@@ -125,17 +125,17 @@ export default function DataTable() {
         <TableHead>
           <TableRow sx={{ backgroundColor: "var(--primary-color)" }}>
             <TableCell />
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)',}}>TRAINEE NAME</TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)',}} align="right">
+            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>TRAINEE NAME</TableCell>
+            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
               EMAIL
             </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)',}} align="right">
+            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
               DEPARTMENT
             </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)',}} align="right">
+            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
               REGION
             </TableCell>
-            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)',}} align="right">
+            <TableCell sx={{ color: "var(--white)", fontFamily: 'var(--font)', fontWeight: 'bold',}}>
               BRANCH
             </TableCell>
           </TableRow>
