@@ -230,6 +230,20 @@ export default function Home() {
         label: "Software Requirements Engineering",
       },
     ],
+
+    "TRAINING TITLE":[
+      {
+        value:  "Data Analytics",
+        label: "Data Analytics",  
+      }
+    ],
+
+    "DEPARTMENT": [
+      {
+        value: "Data Security",
+        label: "Data Security", 
+      }
+    ],
   };
 
   return (
