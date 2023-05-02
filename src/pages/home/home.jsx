@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./home.css";
-import "../assets/variables.css";
-import NavBar from "../components/navBar/navBar";
+import "../../assets/variables.css";
+import NavBar from "../../components/navBar/navBar";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,9 +11,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import DataTable from "../components/table/table";
+import DataTable from "../../components/table/table";
 import Divider from "@mui/material/Divider";
-import {samples, trainings, currencies} from '../services/constants';
+import {samples, trainings, currencies} from '../../services/constants';
 
 
 

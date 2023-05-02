@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo_alt from "../assets/logo_alt.svg";
+import logo_alt from "../../assets/logo_alt.svg";
 import {
   TextField,
   IconButton,
@@ -9,14 +9,14 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import "../assets/variables.css";
+import "../../assets/variables.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
-import ForgotPasswordDialog from "../components/forgotPassword";
+import ForgotPasswordDialog from "../../components/forgotPassword";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
@@ -63,12 +63,16 @@ export default function LoginScreen() {
   return (
     <>
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={alertOpen}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="info" sx={{ width: "100%", fontFamily: 'var(--font)', }}>
-          Password reset instructions sent to your email! <span style={{fontWeight: '900', marginTop: '0px',}}>{email}</span>
+        <Alert
+          onClose={handleClose}
+          severity="info"
+          sx={{ width: "100%", fontFamily: "var(--font)" }}
+        >
+          Password reset instructions sent to your email!
         </Alert>
       </Snackbar>
       <form
@@ -94,10 +98,18 @@ export default function LoginScreen() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ width: "100%", maxWidth: "400px", fontFamily: 'var(--font)' }}
+          style={{
+            width: "100%",
+            maxWidth: "400px",
+            fontFamily: "var(--font)",
+          }}
           autoComplete="off"
           InputProps={{
-            styles: { root: { "&$focused": { outline: "none", fontFamily: 'var(--font)' } } },
+            styles: {
+              root: {
+                "&$focused": { outline: "none", fontFamily: "var(--font)" },
+              },
+            },
             disableUnderline: true,
             autoComplete: "off",
             endAdornment: (
@@ -113,11 +125,19 @@ export default function LoginScreen() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ width: "100%", maxWidth: "400px", fontFamily: 'var(--font)' }}
+          style={{
+            width: "100%",
+            maxWidth: "400px",
+            fontFamily: "var(--font)",
+          }}
           autoComplete={false}
           InputProps={{
             autoComplete: "new-password",
-            styles: { root: { "&$focused": { outline: "none", fontFamily: 'var(--font)' } } },
+            styles: {
+              root: {
+                "&$focused": { outline: "none", fontFamily: "var(--font)" },
+              },
+            },
             disableUnderline: true,
             endAdornment: (
               <InputAdornment position="start">
@@ -138,7 +158,7 @@ export default function LoginScreen() {
             maxWidth: "400px",
             backgroundColor: "#541718",
             padding: "1rem",
-            fontFamily: 'var(--font)',
+            fontFamily: "var(--font)",
             "&:hover": { backgroundColor: "#541718" },
             "&:focus": { backgroundColor: "#541718" },
           }}
@@ -152,15 +172,15 @@ export default function LoginScreen() {
         >
           <LockIcon /> Forgot your password?
         </Button>
-        <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <ForgotPasswordDialog
-            resetEmail={email}
-            open={dialogOpen}
-            onClose={handleDialogClose}
-            onResetPassword={handleResetPassword}
-          />
-        </Dialog>
       </form>
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <ForgotPasswordDialog
+          resetEmail={email}
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          onResetPassword={handleResetPassword}
+        />
+      </Dialog>
     </>
   );
 }
