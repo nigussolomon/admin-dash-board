@@ -13,9 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DataTable from "../../components/table/table";
 import Divider from "@mui/material/Divider";
-import {samples, trainings, currencies} from '../../services/constants';
-
-
+import { samples, trainings, currencies } from "../../services/constants";
 
 const textStyle = {
   minWidth: "48%",
@@ -27,7 +25,7 @@ const iprops = {
 };
 
 export default function Home() {
-  const [selection, setSelection] = useState("TRAINING CATEGORY");
+  const [selection, setSelection] = useState("IT and Technical Skills");
   const [rows, setRows] = useState([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -78,6 +76,7 @@ export default function Home() {
             FormHelperTextProps={iprops}
             select
             label="TRAINING CATEGORY"
+            defaultValue={currencies[0].value}
             helperText="Please select training category"
           >
             {currencies.map((option) => (

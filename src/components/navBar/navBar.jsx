@@ -12,6 +12,8 @@ export default function NavBar() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
     navigate("/")
   };
   return (

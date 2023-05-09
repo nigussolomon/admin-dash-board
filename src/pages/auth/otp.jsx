@@ -1,32 +1,26 @@
 import React, { useState } from "react";
 import logo_alt from "../../assets/logo_alt.svg";
-import {
-  TextField,
-  InputAdornment,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { TextField, InputAdornment, Snackbar, Alert } from "@mui/material";
 import "../../assets/variables.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 
-
-
-export default function LoginScreen() {
+export default function OtpScreen() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [load, setLoad] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoad(true);
-    if (email === "nigus@test.com") {
+    if (otp === "199326") {
       localStorage.setItem("token", "sometoken");
       localStorage.setItem("isAdmin", "false");
       setTimeout(() => {
         setLoad(false);
-        return navigate("/otp");
+        return navigate("/form");
       }, 1500);
     }
     setTimeout(() => {
@@ -34,8 +28,31 @@ export default function LoginScreen() {
     }, 1500);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={alertOpen}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="info"
+          sx={{ width: "100%", fontFamily: "var(--font)" }}
+        >
+          A One Time Password for authentication has been sent to your email
+          check your email and enter it here to continue, please don't share
+          your code with anyone as it is confidential and only for your eyes!
+        </Alert>
+      </Snackbar>
       <form
         style={{
           display: "flex",
@@ -54,10 +71,10 @@ export default function LoginScreen() {
           alt="logo_alt"
         />
         <TextField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          label="OTP"
+          type="password"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
           required
           style={{
             width: "100%",
@@ -73,11 +90,6 @@ export default function LoginScreen() {
             },
             disableUnderline: true,
             autoComplete: "off",
-            endAdornment: (
-              <InputAdornment position="start">
-                <EmailIcon />
-              </InputAdornment>
-            ),
           }}
         />
         <LoadingButton
@@ -95,7 +107,7 @@ export default function LoginScreen() {
             "&:focus": { backgroundColor: "#541718" },
           }}
         >
-          SEND OTP
+          AUTHENTICATE
         </LoadingButton>
       </form>
     </>
