@@ -1,0 +1,22 @@
+.userForm{
+    margin-block: 30px;
+    margin-bottom: -20px;
+}
+
+.questionnaire{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.trainingTable{
+    margin-block: 50px;
+}
+
+.space{
+    width: 30px;
+}
+
+.trainings h2{
+    margin-top: 0px;
+}
