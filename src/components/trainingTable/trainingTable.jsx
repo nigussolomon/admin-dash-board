@@ -31,6 +31,7 @@ import {
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import IconButton from "@mui/material/IconButton";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import ClearIcon from "@mui/icons-material/Clear";
 import { postTraining } from "../../services/api";
 
 const columns = [
@@ -439,6 +440,18 @@ export default function StickyHeadTable({
                   className="saveBtn"
                   style={{ display: "flex", justifyContent: "flex-end" }}
                 >
+                  <Button
+                    onClick={()=>{
+                      setTrainingList([]);
+                    }}
+                    sx={{ padding: "10px", minWidth: "150px" }}
+                    variant="contained"
+                    color="error"
+                    endIcon={<ClearIcon />}
+                  >
+                    CLEAR
+                  </Button>
+                  <div className="space"></div>
                   <Button
                     onClick={SubmitTraings}
                     sx={{ padding: "10px", minWidth: "150px" }}
