@@ -1,41 +1,63 @@
 import React, { useState } from "react";
 import logo_alt from "../../assets/logo_alt.svg";
-import {
-  TextField,
-  InputAdornment,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { TextField, InputAdornment, Snackbar, Alert } from "@mui/material";
 import "../../assets/variables.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
-
-
+import { authenticate } from "../../services/api";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [load, setLoad] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    if (email === "nigus@test.com") {
-      localStorage.setItem("token", "sometoken");
-      localStorage.setItem("isAdmin", "false");
+    setAlertOpen(false);
+    const yes =  await authenticate(email); 
+    console.log(yes)
+    if (yes === true) {
+      localStorage.setItem("tempEmail", email);
       setTimeout(() => {
         setLoad(false);
         return navigate("/otp");
       }, 1500);
+    } else {
+      setLoad(false);
+      setErrorMsg("Email not found, please try with your Bunna Bank company email!");
+      setAlertOpen(true);
     }
     setTimeout(() => {
       setLoad(false);
     }, 1500);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={alertOpen}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          sx={{ width: "100%", fontFamily: "var(--font)" }}
+        >
+          {errorMsg}
+        </Alert>
+      </Snackbar>
       <form
         style={{
           display: "flex",
@@ -71,7 +93,6 @@ export default function LoginScreen() {
                 "&$focused": { outline: "none", fontFamily: "var(--font)" },
               },
             },
-            disableUnderline: true,
             autoComplete: "off",
             endAdornment: (
               <InputAdornment position="start">

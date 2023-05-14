@@ -1,9 +1,9 @@
-function createData(name, email, department, region, trainingTitle, date) {
+export function createData(name, email, department, region, trainingTitle, date) {
   return { name, email, department, region, trainingTitle, date };
 }
 
-function createTrainings(category, title, season) {
-  return { category, title, season };
+export function createTrainings(id,category, title, season) {
+  return { id,category, title, season };
 }
 
 export const samples = [

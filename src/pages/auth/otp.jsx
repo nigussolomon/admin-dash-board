@@ -5,23 +5,36 @@ import "../../assets/variables.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
+import { verifyAuthenticate } from "../../services/api.js";
 
 export default function OtpScreen() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [load, setLoad] = useState(false);
   const [alertOpen, setAlertOpen] = useState(true);
+  const [alertMessage, setAlertMessage] = useState(
+    "A One Time Password for authentication has been sent to your email check your email and enter it here to continue, please don't share your code with anyone as it is confidential and only for your eyes!"
+  );
+  const [alertPriority, setAlertPriority] = useState("info");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    if (otp === "199326") {
-      localStorage.setItem("token", "sometoken");
+    setAlertOpen(false);
+    const yes = await verifyAuthenticate(
+      otp
+    );
+    if (yes === true) {
       localStorage.setItem("isAdmin", "false");
       setTimeout(() => {
         setLoad(false);
         return navigate("/form");
       }, 1500);
+    } else {
+      setAlertPriority('error')
+      setAlertOpen(true);
+      setLoad(false);
+      setAlertMessage('The otp you entered is incorrect please check your email and try again!')
     }
     setTimeout(() => {
       setLoad(false);
@@ -45,12 +58,10 @@ export default function OtpScreen() {
       >
         <Alert
           onClose={handleClose}
-          severity="info"
+          severity={alertPriority}
           sx={{ width: "100%", fontFamily: "var(--font)" }}
         >
-          A One Time Password for authentication has been sent to your email
-          check your email and enter it here to continue, please don't share
-          your code with anyone as it is confidential and only for your eyes!
+          {alertMessage}
         </Alert>
       </Snackbar>
       <form

@@ -4,17 +4,22 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import "./nav.css";
+import jwt_decode from "jwt-decode";
 
 export default function NavBar() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  if (token != null ) {
+    var decodedToken = jwt_decode(token);
+  } 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.removeItem('token');
-    localStorage.removeItem('isAdmin');
-    navigate("/")
+    localStorage.removeItem("token");
+    localStorage.removeItem("isAdmin");
+    navigate("/");
   };
   return (
     <>
@@ -24,8 +29,21 @@ export default function NavBar() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <div className="logo">
-              <img src={logo} alt="bunnaBank" />
+            <div
+              className="nav"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <div className="logo">
+                <img src={logo} alt="bunnaBank" />
+              </div>
+              <div className="user">
+                <h4>{decodedToken['email']} | {decodedToken['name']}</h4>
+              </div>
             </div>
           </Toolbar>
         </Container>
@@ -35,9 +53,31 @@ export default function NavBar() {
         className="nav"
         position="static"
       >
-        <Container maxWidth="xl" sx={{display: 'flex', height: "35px", justifyContent: 'flex-end' ,alignItems: 'right',}}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            display: "flex",
+            height: "35px",
+            justifyContent: "flex-end",
+            alignItems: "right",
+          }}
+        >
           <Toolbar disableGutters>
-          <Button onClick={handleSubmit}lick variant="contained" color="primary" type="submit" sx={{ backgroundColor: '#541718', '&:hover': { backgroundColor: '#541718' }, '&:focus': { backgroundColor: '#541718' } }} endIcon={<LogoutIcon />}>Logout</Button>
+            <Button
+              onClick={handleSubmit}
+              lick
+              variant="contained"
+              color="primary"
+              type="submit"
+              sx={{
+                backgroundColor: "#541718",
+                "&:hover": { backgroundColor: "#541718" },
+                "&:focus": { backgroundColor: "#541718" },
+              }}
+              endIcon={<LogoutIcon />}
+            >
+              Logout
+            </Button>
           </Toolbar>
         </Container>
       </AppBar>

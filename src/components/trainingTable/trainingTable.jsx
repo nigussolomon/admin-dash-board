@@ -20,33 +20,44 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Dialog, DialogTitle, DialogContent } from "@mui/material";
+import jwt_decode from "jwt-decode";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import IconButton from "@mui/material/IconButton";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import { postTraining } from "../../services/api";
 
 const columns = [
-  { id: "trainingTitle", label: "Training Title", minWidth: 370 },
-  { id: "date", label: "Seasons", minWidth: 200 },
+  { id: "title", label: "Training Title", minWidth: 370 },
+  { id: "season", label: "Seasons", minWidth: 280 },
 ];
 
 export default function StickyHeadTable({
   rows,
   loading,
-  onDataChanged,
-  deleteData,
+  selectedSeasons,
+  setSelectedSeasons,
 }) {
-  const [state, setState] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertPriority, setAlertPriority] = useState("error");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selectedSeasons, setSelectedSeasons] = useState(
-    Array.from({ length: rows.length }, () => seasons[0].value)
-  );
+  // const [selectedSeasons, setSelectedSeasons] = useState(seasonsVal);
   const [seasonNew, setSeasonNew] = useState(seasons[0].value);
   const [trainingList, setTrainingList] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(
     Array.from({ length: 5 }, () => false)
   );
+  const [uniqId, setUniqId] = useState(0);
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
 
   const handleDialogOpen = (rowIndex) => {
     const updatedDialogOpen = [...dialogOpen];
@@ -54,18 +65,31 @@ export default function StickyHeadTable({
     setDialogOpen(updatedDialogOpen);
     console.log(dialogOpen);
   };
-
+  console.log(selectedSeasons);
   const handleDialogClose = (rowIndex) => {
     const updatedDialogOpen = [...dialogOpen];
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 100; index++) {
       updatedDialogOpen[index] = false;
     }
     setDialogOpen(updatedDialogOpen);
   };
 
+  const SubmitTraings = async () => {
+    await trainingList.forEach(async (train) => {
+      delete train["title"];
+      delete train["id"];
+      const posted = await postTraining(train);
+      if (posted === true) {
+        setAlertMessage("Trainings added succesfuly");
+        setAlertPriority("success");
+        setAlertOpen(true);
+        setTrainingList([]);
+      }
+    });
+  };
+
   const handleSeasonChange = (rowIndex, event) => {
     const updatedSelectedSeasons = [...selectedSeasons];
-    console.log(rowIndex);
     updatedSelectedSeasons[rowIndex] = event.target.value;
     setSelectedSeasons(updatedSelectedSeasons);
   };
@@ -93,6 +117,13 @@ export default function StickyHeadTable({
     style: { fontFamily: "var(--font)" },
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
   if (loading) {
     return (
       <Box sx={{ width: "100%" }}>
@@ -105,6 +136,19 @@ export default function StickyHeadTable({
   } else {
     return (
       <>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={alertOpen}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity={alertPriority}
+            sx={{ width: "100%", fontFamily: "var(--font)" }}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
         <div
           className="trainingsData"
           style={{
@@ -113,15 +157,18 @@ export default function StickyHeadTable({
             flexWrap: "wrap",
           }}
         >
-          <div className="div1" style={{minWidth: "70%",}}>
+          <div className="div1" style={{ minWidth: "60%" }}>
             <Divider />
             <div className="div">
               <h2>TRAININGS LIST</h2>
             </div>
             <Divider />
             <br />
-            <Paper sx={{  overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 445, minHeight: 445 }} loading={loading}>
+            <Paper sx={{ overflow: "hidden" }}>
+              <TableContainer
+                sx={{ maxHeight: 445, minHeight: 445 }}
+                loading={loading}
+              >
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
                     <TableRow>
@@ -158,7 +205,7 @@ export default function StickyHeadTable({
                           >
                             {columns.map((column) => {
                               const value = row[column.id];
-                              if (column.id === "date") {
+                              if (column.id === "season") {
                                 return (
                                   <TableCell
                                     sx={{
@@ -183,6 +230,7 @@ export default function StickyHeadTable({
                                         InputProps={iprops}
                                         select
                                         value={selectedSeasons[index]}
+                                        defaultValue={selectedSeasons[index]}
                                         onChange={(event) =>
                                           handleSeasonChange(index, event)
                                         }
@@ -204,31 +252,43 @@ export default function StickyHeadTable({
                                         variant="contained"
                                         color="success"
                                         onClick={() => {
+                                          setAlertOpen(false);
+
                                           var pass = true;
                                           if (trainingList.length < 5) {
                                             trainingList.forEach((training) => {
                                               if (
                                                 training["title"] ===
-                                                row["trainingTitle"]
+                                                row["title"]
                                               ) {
                                                 pass = false;
-                                                console.log(
-                                                  "second validation"
+                                                setAlertPriority("error");
+                                                setAlertMessage(
+                                                  "You have already picked this training"
                                                 );
+                                                setAlertOpen(true);
                                               }
                                             });
                                             if (pass) {
+                                              console.log(row);
                                               trainingList.push({
-                                                id: index,
-                                                title: row["trainingTitle"],
+                                                id: row["id"],
+                                                training_id: row["id"],
+                                                title: row["title"],
                                                 season: selectedSeasons[index],
+                                                employee_id:
+                                                  decodedToken["employee_id"],
                                               });
-
+                                              console.log(trainingList);
                                               setTrainingList(trainingList);
-                                              setState(state + index);
+                                              setUniqId(uniqId + 1);
                                             }
                                           } else {
-                                            console.log("Validation works");
+                                            setAlertPriority("error");
+                                            setAlertMessage(
+                                              "You can only chose 5 trainings"
+                                            );
+                                            setAlertOpen(true);
                                           }
                                         }}
                                       >
@@ -269,14 +329,14 @@ export default function StickyHeadTable({
               />
             </Paper>
           </div>
-          <div className="div2" style={{minWidth: "28%",}}>
+          <div className="div2" style={{ minWidth: "35%", maxWidth: "35%" }}>
             <Divider />
             <div className="div">
               <h2>YOUR TRAININGS LIST</h2>
             </div>
             <Divider />
             <br />
-            <Paper sx={{ overflow: "hidden", minHeight: 495}}>
+            <Paper sx={{ overflow: "hidden", minHeight: 495 }}>
               <div className="trainings" style={{ padding: "5%" }}>
                 {trainingList.length > 0 ? (
                   <List>
@@ -284,6 +344,10 @@ export default function StickyHeadTable({
                       <>
                         <ListItem key={item.id}>
                           <ListItemText
+                            sx={{
+                              fontFamily: "var(--font)",
+                              marginRight: "30px",
+                            }}
                             primary={item.title}
                             secondary={item.season}
                           />
@@ -376,6 +440,7 @@ export default function StickyHeadTable({
                   style={{ display: "flex", justifyContent: "flex-end" }}
                 >
                   <Button
+                    onClick={SubmitTraings}
                     sx={{ padding: "10px", minWidth: "150px" }}
                     variant="contained"
                     color="success"
