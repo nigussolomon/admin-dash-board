@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import "../../assets/variables.css";
 import NavBar from "../../components/navBar/navBar";
-import {
-  samples,
-  trainings,
-  currencies,
-  createTrainings,
-} from "../../services/constants";
+import { createTrainings } from "../../services/constants";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Container from "@mui/material/Container";
@@ -19,11 +14,10 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import { fetchCategories } from "../../services/api";
 import { filterTraining } from "../../services/api";
-import { postTraining } from "../../services/api";
 import "./form.css";
 
 export default function Form() {
-  const [selection, setSelection] = useState("IT and Technical Skills");
+  const [selection, setSelection] = useState("");
   const [fullLoad, setFullLoad] = useState(true);
   const [CATEGORY, setCATEGORY] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -53,8 +47,10 @@ export default function Form() {
         )
       );
     });
-    await setTrainings(tempTrainings)
-    await setSelectedSeasons(Array.from({ length: tempTrainings.length  }, () => "Summer"));
+    await setTrainings(tempTrainings);
+    await setSelectedSeasons(
+      Array.from({ length: tempTrainings.length }, () => "Summer")
+    );
     setLoading(false);
   };
 
@@ -77,6 +73,8 @@ export default function Form() {
         });
       }
     });
+    await setSelection(tempCat[0].value);
+    await setChildrenSelection(tempChildren[0].value);
     setChildren(tempChildren);
     setCategories(tempCat);
   };
@@ -103,6 +101,7 @@ export default function Form() {
       }
     });
     await setChildren(tempChildren);
+    await setChildrenSelection(tempChildren[0].value);
   };
 
   if (fullLoad) {
@@ -149,7 +148,8 @@ export default function Form() {
                 FormHelperTextProps={iprops}
                 select
                 label="TRAINING CATEGORY"
-                defaultValue={categories[0].value}
+                value={selection}
+                defaultValue={selection}
                 helperText="Please select training category"
               >
                 {categories.map((option) => (
@@ -169,6 +169,8 @@ export default function Form() {
                 InputLabelProps={iprops}
                 FormHelperTextProps={iprops}
                 select
+                value={childrenSelection}
+                defaultValue={childrenSelection}
                 label="SUB CATEGORY"
                 helperText="Please select a sub category"
               >
@@ -187,6 +189,22 @@ export default function Form() {
                 }}
               >
                 <Button
+                  onClick={async () => {
+                    await setTrainings([]);
+                    await setSelection(categories[0].value);
+                    const tempChildren = [];
+                    await CATEGORY.forEach((cat) => {
+                      console.log(cat.ancestry === categories[0].value.toString());
+                      if (cat.ancestry === categories[0].value.toString()) {
+                        tempChildren.push({
+                          value: cat.id,
+                          label: cat.name,
+                        });
+                      }
+                    });
+                    await setChildren(tempChildren);
+                    await setChildrenSelection(tempChildren[0].value);
+                  }}
                   sx={{ padding: "10px", minWidth: "180px" }}
                   variant="contained"
                   color="error"
@@ -222,7 +240,7 @@ export default function Form() {
           </Container>
         ) : trainings.length === 0 && loading === true ? (
           <Container maxWidth="xl">
-            <Box >
+            <Box>
               <Skeleton sx={{ height: "5vh" }} />
               <Skeleton sx={{ height: "5vh" }} />
               <Skeleton sx={{ height: "5vh" }} animation="wave" />
