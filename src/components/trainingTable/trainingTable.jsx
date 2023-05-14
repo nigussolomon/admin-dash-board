@@ -128,10 +128,10 @@ export default function StickyHeadTable({
   if (loading) {
     return (
       <Box sx={{ width: "100%" }}>
-        <Skeleton sx={{ height: "5vh" }} />
-        <Skeleton sx={{ height: "5vh" }} />
-        <Skeleton sx={{ height: "5vh" }} animation="wave" />
-        <Skeleton sx={{ height: "5vh" }} animation="wave" />
+        <Skeleton sx={{ height: "8vh" }} />
+        <Skeleton sx={{ height: "8vh" }} />
+        <Skeleton sx={{ height: "8vh" }} animation="wave" />
+        <Skeleton sx={{ height: "8vh" }} animation="wave" />
       </Box>
     );
   } else {
@@ -254,7 +254,6 @@ export default function StickyHeadTable({
                                         color="success"
                                         onClick={() => {
                                           setAlertOpen(false);
-
                                           var pass = true;
                                           if (trainingList.length < 5) {
                                             trainingList.forEach((training) => {
@@ -340,128 +339,128 @@ export default function StickyHeadTable({
             <Paper sx={{ overflow: "hidden", minHeight: 495 }}>
               <div className="trainings" style={{ padding: "5%" }}>
                 {trainingList.length > 0 ? (
-                  <List>
-                    {trainingList.map((item) => (
-                      <>
-                        <ListItem key={item.id}>
-                          <ListItemText
-                            sx={{
-                              fontFamily: "var(--font)",
-                              marginRight: "30px",
-                            }}
-                            primary={item.title}
-                            secondary={item.season}
-                          />
-                          <ListItemSecondaryAction>
-                            <>
-                              <IconButton
-                                edge="end"
-                                color="error"
-                                aria-label="delete"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                              <IconButton
-                                edge="end"
-                                color="warning"
-                                aria-label="delete"
-                                onClick={() => handleDialogOpen(item.id)}
-                              >
-                                <EditCalendarIcon />
-                              </IconButton>
-                            </>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                        <Dialog
-                          sx={{ fontFamily: "var(--font)" }}
-                          open={dialogOpen[item.id]}
-                          onClose={handleDialogClose}
-                        >
-                          <DialogTitle sx={{ fontFamily: "var(--font)" }}>
-                            {item.title}
-                          </DialogTitle>
-                          <DialogContent>
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                trainingList.filter(
-                                  (_item) => _item.id === item.id
-                                )[0]["season"] = seasonNew;
-                                setTrainingList(trainingList);
-                                handleDialogClose(item.id);
+                  <>
+                    <List>
+                      {trainingList.map((item) => (
+                        <>
+                          <ListItem key={item.id}>
+                            <ListItemText
+                              sx={{
+                                fontFamily: "var(--font)",
+                                marginRight: "30px",
                               }}
-                            >
-                              <TextField
-                                required
-                                select
-                                autoFocus
-                                margin="dense"
-                                label="Season"
-                                type="text"
-                                fullWidth
-                                value={seasonNew}
-                                onChange={(e) => {
-                                  setSeasonNew(e.target.value);
+                              primary={item.title}
+                              secondary={item.season}
+                            />
+                            <ListItemSecondaryAction>
+                              <>
+                                <IconButton
+                                  edge="end"
+                                  color="error"
+                                  aria-label="delete"
+                                  onClick={() => handleDelete(item.id)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                                <IconButton
+                                  edge="end"
+                                  color="warning"
+                                  aria-label="delete"
+                                  onClick={() => handleDialogOpen(item.id)}
+                                >
+                                  <EditCalendarIcon />
+                                </IconButton>
+                              </>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          <Dialog
+                            sx={{ fontFamily: "var(--font)" }}
+                            open={dialogOpen[item.id]}
+                            onClose={handleDialogClose}
+                          >
+                            <DialogTitle sx={{ fontFamily: "var(--font)" }}>
+                              {item.title}
+                            </DialogTitle>
+                            <DialogContent>
+                              <form
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  trainingList.filter(
+                                    (_item) => _item.id === item.id
+                                  )[0]["season"] = seasonNew;
+                                  setTrainingList(trainingList);
+                                  handleDialogClose(item.id);
                                 }}
                               >
-                                {seasons.map((option) => (
-                                  <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </MenuItem>
-                                ))}
-                              </TextField>
-
-                              <Button
-                                sx={{
-                                  fontFamily: "var(--font)",
-                                  color: "var(--primary)",
-                                }}
-                                color="primary"
-                                type="submit"
-                              >
-                                Update Season
-                              </Button>
-                            </form>
-                          </DialogContent>
-                        </Dialog>
-                      </>
-                    ))}
-                  </List>
+                                <TextField
+                                  required
+                                  select
+                                  autoFocus
+                                  margin="dense"
+                                  label="Season"
+                                  type="text"
+                                  fullWidth
+                                  value={seasonNew}
+                                  onChange={(e) => {
+                                    setSeasonNew(e.target.value);
+                                  }}
+                                >
+                                  {seasons.map((option) => (
+                                    <MenuItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                                <Button
+                                  sx={{
+                                    fontFamily: "var(--font)",
+                                    color: "var(--primary)",
+                                  }}
+                                  type="submit"
+                                >
+                                  Update Season
+                                </Button>
+                              </form>
+                            </DialogContent>
+                          </Dialog>
+                        </>
+                      ))}
+                    </List>
+                    <Divider />
+                    <br />
+                    <div
+                      className="saveBtn"
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setTrainingList([]);
+                        }}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="error"
+                        endIcon={<ClearIcon />}
+                      >
+                        CLEAR
+                      </Button>
+                      <div className="space"></div>
+                      <Button
+                        onClick={SubmitTraings}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="success"
+                        endIcon={<SaveIcon />}
+                      >
+                        SUBMIT
+                      </Button>
+                    </div>
+                  </>
                 ) : (
                   <h4>No trainings added!</h4>
                 )}
-                <Divider />
-                <br />
-                <div
-                  className="saveBtn"
-                  style={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    onClick={()=>{
-                      setTrainingList([]);
-                    }}
-                    sx={{ padding: "10px", minWidth: "150px" }}
-                    variant="contained"
-                    color="error"
-                    endIcon={<ClearIcon />}
-                  >
-                    CLEAR
-                  </Button>
-                  <div className="space"></div>
-                  <Button
-                    onClick={SubmitTraings}
-                    sx={{ padding: "10px", minWidth: "150px" }}
-                    variant="contained"
-                    color="success"
-                    endIcon={<SaveIcon />}
-                  >
-                    SUBMIT
-                  </Button>
-                </div>
               </div>
             </Paper>
           </div>

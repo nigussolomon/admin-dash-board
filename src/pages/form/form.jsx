@@ -15,6 +15,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { fetchCategories } from "../../services/api";
 import { filterTraining } from "../../services/api";
 import "./form.css";
+import logo_alt from "../../assets/logo_alt.svg";
 
 export default function Form() {
   const [selection, setSelection] = useState("");
@@ -121,10 +122,11 @@ export default function Form() {
             flexDirection: "column",
           }}
         >
-          <Skeleton sx={{ height: "8vh", width: "20vw" }} />
-          <Skeleton sx={{ height: "8vh", width: "20vw" }} />
-          <Skeleton sx={{ height: "8vh", width: "20vw" }} animation="wave" />
-          <Skeleton sx={{ height: "8vh", width: "20vw" }} animation="wave" />
+          <img
+          style={{ width: "280px", height: "150px", animation: 'pulsate 3s ease-in-out infinite' }}
+          src={logo_alt}
+          alt="logo_alt"
+        />
         </Box>
       )
     );
@@ -241,10 +243,10 @@ export default function Form() {
         ) : trainings.length === 0 && loading === true ? (
           <Container maxWidth="xl">
             <Box>
-              <Skeleton sx={{ height: "5vh" }} />
-              <Skeleton sx={{ height: "5vh" }} />
-              <Skeleton sx={{ height: "5vh" }} animation="wave" />
-              <Skeleton sx={{ height: "5vh" }} animation="wave" />
+              <Skeleton sx={{ height: "8vh" }} />
+              <Skeleton sx={{ height: "8vh" }} />
+              <Skeleton sx={{ height: "8vh" }} animation="wave" />
+              <Skeleton sx={{ height: "8vh" }} animation="wave" />
             </Box>
           </Container>
         ) : null}

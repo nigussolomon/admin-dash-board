@@ -14,8 +14,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DataTable from "../../components/table/table";
 import Divider from "@mui/material/Divider";
 import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
 import { samples, trainings, currencies } from "../../services/constants";
+import logo_alt from "../../assets/logo_alt.svg";
 
 const textStyle = {
   minWidth: "48%",
@@ -69,12 +69,22 @@ export default function Home() {
       setTimeout(() => {
         setFullLoad(false);
       }, 3000),
-      <Box sx={{width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column',}}>
-        <Skeleton sx={{ height: '8vh', width: '20vw' }}/>
-        <Skeleton sx={{ height: '8vh', width: '20vw' }}/>
-        <Skeleton sx={{ height: '8vh', width: '20vw' }} animation="wave" />
-        <Skeleton sx={{ height: '8vh', width: '20vw' }} animation="wave" />
-      </Box>
+      <Box
+          sx={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <img
+          style={{ width: "280px", height: "150px", animation: 'pulsate 1s ease-in-out infinite' }}
+          src={logo_alt}
+          alt="logo_alt"
+        />
+        </Box>
     )
   } else {
     return (
