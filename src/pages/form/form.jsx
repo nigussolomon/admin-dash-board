@@ -32,10 +32,11 @@ export default function Form() {
 
   console.log(localStorage.getItem("tempEmail"));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (sub) => {
     setLoading(true);
     const tempTrainings = [];
-    const data = await filterTraining(childrenSelection);
+    console.log(sub);
+    const data = await filterTraining(sub);
 
     await data.forEach((train) => {
       console.log(train.training_title);
@@ -75,7 +76,6 @@ export default function Form() {
       }
     });
     await setSelection(tempCat[0].value);
-    await setChildrenSelection(tempChildren[0].value);
     setChildren(tempChildren);
     setCategories(tempCat);
   };
@@ -102,7 +102,7 @@ export default function Form() {
       }
     });
     await setChildren(tempChildren);
-    await setChildrenSelection(tempChildren[0].value);
+    await setChildrenSelection('');
   };
 
   if (fullLoad) {
@@ -165,14 +165,15 @@ export default function Form() {
                 onChange={async (e) => {
                   console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
+                  await handleSubmit(e.target.value);
                 }}
                 sx={textStyle}
                 InputProps={iprops}
                 InputLabelProps={iprops}
                 FormHelperTextProps={iprops}
-                select
+                select  
                 value={childrenSelection}
-                defaultValue={childrenSelection}
+                defaultValue={null}
                 label="SUB CATEGORY"
                 helperText="Please select a sub category"
               >
@@ -182,9 +183,10 @@ export default function Form() {
                   </MenuItem>
                 ))}
               </TextField>
-              <div
+              <div 
                 className="subButton"
                 style={{
+                  display: "none",
                   justifyContent: "flex-end",
                   width: "100%",
                   flexWrap: "wrap",
