@@ -131,21 +131,21 @@ export const samples = [
 
 export const seasons = [
   {
-    value: "Summer",
-    label: "Summer",
+    value: "1st Quarter",
+    label: "1st Quarter",
   },
   {
-    value: "Fall",
-    label: "Fall",
+    value: "2nd Quarter",
+    label: "2nd Quarter",
   },
   {
-    value: "Winter",
-    label: "Winter",
+    value: "3rd Quarter",
+    label: "3rd Quarter",
   },
 
   {
-    value: "Spring",
-    label: "Spring",
+    value: "4th Quarter",
+    label: "4th Quarter",
   },
 ]
 

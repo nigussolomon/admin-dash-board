@@ -36,7 +36,7 @@ import { postTraining } from "../../services/api";
 
 const columns = [
   { id: "title", label: "Training Title", minWidth: 370 },
-  { id: "season", label: "Seasons", minWidth: 280 },
+  { id: "season", label: "Quarters", minWidth: 280 },
 ];
 
 export default function StickyHeadTable({
@@ -50,7 +50,6 @@ export default function StickyHeadTable({
   const [alertPriority, setAlertPriority] = useState("error");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  // const [selectedSeasons, setSelectedSeasons] = useState(seasonsVal);
   const [seasonNew, setSeasonNew] = useState(seasons[0].value);
   const [trainingList, setTrainingList] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(

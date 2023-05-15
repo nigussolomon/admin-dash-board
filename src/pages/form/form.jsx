@@ -27,7 +27,7 @@ export default function Form() {
   const [childrenSelection, setChildrenSelection] = useState();
   const [trainings, setTrainings] = useState([]);
   const [selectedSeasons, setSelectedSeasons] = useState(
-    Array.from({ length: trainings.length }, () => "Summer")
+    Array.from({ length: trainings.length }, () => "1st Quarter")
   );
 
   console.log(localStorage.getItem("tempEmail"));
@@ -51,7 +51,7 @@ export default function Form() {
     });
     await setTrainings(tempTrainings);
     await setSelectedSeasons(
-      Array.from({ length: tempTrainings.length }, () => "Summer")
+      Array.from({ length: tempTrainings.length }, () => "1st Quarter")
     );
     setLoading(false);
   };
