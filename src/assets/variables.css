@@ -6,3 +6,18 @@
 	--white: #e4e4e4;
   --font: "Barlow", sans-serif;
 }
+
+@keyframes pulsate {
+  0% {	
+    transform: scale(1);
+    opacity: 50%;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 100%;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 50%;
+  }
+}

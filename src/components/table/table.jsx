@@ -34,7 +34,7 @@ export default function StickyHeadTable({rows, loading}) {
 
   if (loading) {
     return(
-      <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Skeleton sx={{ height: '5vh' }}/>
       <Skeleton sx={{ height: '5vh' }}/>
       <Skeleton sx={{ height: '5vh' }} animation="wave" />

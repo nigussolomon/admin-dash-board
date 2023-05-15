@@ -1,29 +1,25 @@
 import React, { useState } from "react";
-import logo_alt from "../assets/logo_alt.svg";
+import logo_alt from "../../assets/logo_alt.svg";
 import {
   TextField,
-  IconButton,
   InputAdornment,
   Button,
   Dialog,
   Snackbar,
   Alert,
 } from "@mui/material";
-import "../assets/variables.css";
+import "../../assets/variables.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
-import EmailIcon from "@mui/icons-material/Email";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import EmailIcon from "@mui/icons-material/Email"
 import LockIcon from "@mui/icons-material/Lock";
-import ForgotPasswordDialog from "../components/forgotPassword";
+import ForgotPasswordDialog from "../../components/forgotPassword";
 
-export default function LoginScreen() {
+export default function AdminLoginScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [load, setLoad] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [load, setLoad] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -39,17 +35,21 @@ export default function LoginScreen() {
     handleDialogClose();
     setAlertOpen(true);
   };
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoad(true);
+    if (email === "admin@admin.com" && password === "admin") {
+      localStorage.setItem("token", "sometoken");
+      localStorage.setItem("isAdmin", "true");
+      setTimeout(() => {
+        setLoad(false);
+        return navigate("/home");
+      }, 1500);
+    }
     setTimeout(() => {
       setLoad(false);
-      navigate("/home");
-    }, 2500);
+    }, 1500);
   };
 
   const handleClose = (event, reason) => {
@@ -63,12 +63,16 @@ export default function LoginScreen() {
   return (
     <>
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={alertOpen}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="info" sx={{ width: "100%", fontFamily: 'var(--font)', }}>
-          Password reset instructions sent to your email! <span style={{fontWeight: '900', marginTop: '0px',}}>{email}</span>
+        <Alert
+          onClose={handleClose}
+          severity="info"
+          sx={{ width: "100%", fontFamily: "var(--font)" }}
+        >
+          Password reset instructions sent to your email!
         </Alert>
       </Snackbar>
       <form
@@ -94,10 +98,18 @@ export default function LoginScreen() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ width: "100%", maxWidth: "400px", fontFamily: 'var(--font)' }}
+          style={{
+            width: "100%",
+            maxWidth: "400px",
+            fontFamily: "var(--font)",
+          }}
           autoComplete="off"
           InputProps={{
-            styles: { root: { "&$focused": { outline: "none", fontFamily: 'var(--font)' } } },
+            styles: {
+              root: {
+                "&$focused": { outline: "none", fontFamily: "var(--font)" },
+              },
+            },
             disableUnderline: true,
             autoComplete: "off",
             endAdornment: (
@@ -109,23 +121,24 @@ export default function LoginScreen() {
         />
         <TextField
           label="Password"
-          type={showPassword ? "text" : "password"}
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ width: "100%", maxWidth: "400px", fontFamily: 'var(--font)' }}
+          style={{
+            width: "100%",
+            maxWidth: "400px",
+            fontFamily: "var(--font)",
+          }}
           autoComplete={false}
           InputProps={{
             autoComplete: "new-password",
-            styles: { root: { "&$focused": { outline: "none", fontFamily: 'var(--font)' } } },
+            styles: {
+              root: {
+                "&$focused": { outline: "none", fontFamily: "var(--font)" },
+              },
+            },
             disableUnderline: true,
-            endAdornment: (
-              <InputAdornment position="start">
-                <IconButton onClick={handleClickShowPassword}>
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
           }}
         />
         <LoadingButton
@@ -138,7 +151,7 @@ export default function LoginScreen() {
             maxWidth: "400px",
             backgroundColor: "#541718",
             padding: "1rem",
-            fontFamily: 'var(--font)',
+            fontFamily: "var(--font)",
             "&:hover": { backgroundColor: "#541718" },
             "&:focus": { backgroundColor: "#541718" },
           }}
@@ -152,15 +165,15 @@ export default function LoginScreen() {
         >
           <LockIcon /> Forgot your password?
         </Button>
-        <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <ForgotPasswordDialog
-            resetEmail={email}
-            open={dialogOpen}
-            onClose={handleDialogClose}
-            onResetPassword={handleResetPassword}
-          />
-        </Dialog>
       </form>
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <ForgotPasswordDialog
+          resetEmail={email}
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          onResetPassword={handleResetPassword}
+        />
+      </Dialog>
     </>
   );
 }
