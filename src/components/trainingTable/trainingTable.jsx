@@ -155,7 +155,7 @@ export default function StickyHeadTable({
           style={{
             display: "flex",
             justifyContent: "space-between",
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
           }}
         >
           <div className="div1" style={{ minWidth: "60%" }}>
@@ -300,7 +300,7 @@ export default function StickyHeadTable({
                               } else {
                                 return (
                                   <TableCell
-                                    sx={{ fontFamily: "var(--font)" }}
+                                    sx={{ fontFamily: "var(--font)", maxWidth:'300px' }}
                                     key={column.id}
                                     align={column.align}
                                   >
@@ -346,6 +346,7 @@ export default function StickyHeadTable({
                           <ListItem key={item.id}>
                             <ListItemText
                               sx={{
+                                width: "75%",
                                 fontFamily: "var(--font)",
                                 marginRight: "30px",
                               }}
