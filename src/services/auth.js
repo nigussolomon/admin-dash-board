@@ -5,9 +5,9 @@ import Box from "@mui/material/Box";
 import logo_alt from "../assets/logo_alt.svg";
 import jwt_decode from "jwt-decode";
 
-const token = localStorage.getItem("token");
-const decodedToken = jwt_decode(token);
 function isAuthenticated() {
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
   if (token !== null && token !== undefined) {
     return true;
   } else {
@@ -16,7 +16,11 @@ function isAuthenticated() {
 }
 
 async function canApply() {
-  const pass = await adminFilterTraining("q[employee_id_eq]="+decodedToken['employee_id']);
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
+  const pass = await adminFilterTraining(
+    "q[employee_id_eq]=" + decodedToken["employee_id"]
+  );
   if (pass.length >= 5) {
     return false;
   } else {
@@ -37,30 +41,32 @@ const Protected = ({ children }) => {
         const pass = await canApply();
         if (pass === false) {
           return navigate("/blocked");
-        } else{
+        } else {
           setLoad(true);
         }
       }, 0),
-      <Box
-        sx={{
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <img
-          style={{
-            width: "280px",
-            height: "150px",
-            animation: "pulsate 3s ease-in-out infinite",
+      (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
           }}
-          src={logo_alt}
-          alt="logo_alt"
-        />
-      </Box>
+        >
+          <img
+            style={{
+              width: "280px",
+              height: "150px",
+              animation: "pulsate 3s ease-in-out infinite",
+            }}
+            src={logo_alt}
+            alt="logo_alt"
+          />
+        </Box>
+      )
     );
   } else {
     return children;
