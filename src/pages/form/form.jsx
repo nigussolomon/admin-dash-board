@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import "../../assets/variables.css";
 import NavBar from "../../components/navBar/navBar";
-import { createTrainings } from "../../services/constants";
+import { createTrainings, seasons } from "../../services/constants";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import DataTable from "../../components/trainingTable/trainingTable";
-import Button from "@mui/material/Button";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import { fetchCategories } from "../../services/api";
 import { filterTraining } from "../../services/api";
+import { newTraining } from "../../services/api";
+import { postTraining } from "../../services/api";
 import "./form.css";
 import logo_alt from "../../assets/logo_alt.svg";
+import jwt_decode from "jwt-decode";
+import { Snackbar, Alert } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export default function Form() {
   const [selection, setSelection] = useState("");
@@ -29,8 +31,20 @@ export default function Form() {
   const [selectedSeasons, setSelectedSeasons] = useState(
     Array.from({ length: trainings.length }, () => "1st Quarter")
   );
+  const [toggleOther, setToggleOther] = useState("none");
+  const [customTraining, setCustomTraining] = useState("");
+  const [season, setSeason] = useState("1st Quarter");
+  const [customTrainingsAmount, setCustomTrainingsAmount] = useState(0);
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertPriority, setAlertPriority] = useState("error");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [submitNewTraining, setSubmitNewTraining] = useState(false);
 
-  console.log(localStorage.getItem("tempEmail"));
+  function handleClose() {
+    setAlertOpen(false);
+  }
 
   const handleSubmit = async (sub) => {
     setLoading(true);
@@ -90,6 +104,7 @@ export default function Form() {
   };
 
   const categoryChange = async (e) => {
+    setToggleOther("none");
     await setSelection(e.target.value);
     const tempChildren = [];
     await CATEGORY.forEach((cat) => {
@@ -102,7 +117,7 @@ export default function Form() {
       }
     });
     await setChildren(tempChildren);
-    await setChildrenSelection('');
+    await setChildrenSelection("");
   };
 
   if (fullLoad) {
@@ -123,10 +138,14 @@ export default function Form() {
           }}
         >
           <img
-          style={{ width: "280px", height: "150px", animation: 'pulsate 3s ease-in-out infinite' }}
-          src={logo_alt}
-          alt="logo_alt"
-        />
+            style={{
+              width: "280px",
+              height: "150px",
+              animation: "pulsate 3s ease-in-out infinite",
+            }}
+            src={logo_alt}
+            alt="logo_alt"
+          />
         </Box>
       )
     );
@@ -134,6 +153,19 @@ export default function Form() {
     return (
       <>
         <NavBar />
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={alertOpen}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity={alertPriority}
+            sx={{ width: "100%", fontFamily: "var(--font)" }}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
         <Container maxWidth="xl">
           <h1 style={{ marginBottom: "2px" }}>TRAINING NEED ASSESMENT </h1>
           <h3 style={{ marginTop: 0, fontWeight: "400" }}>
@@ -165,13 +197,25 @@ export default function Form() {
                 onChange={async (e) => {
                   console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
-                  await handleSubmit(e.target.value);
+                  console.log(
+                    children.filter((child) => child.value === e.target.value)
+                  );
+                  if (
+                    children.filter(
+                      (child) => child.value === e.target.value
+                    )[0]["label"] === "Other"
+                  ) {
+                    setToggleOther("flex");
+                  } else {
+                    setToggleOther("none");
+                    await handleSubmit(e.target.value);
+                  }
                 }}
                 sx={textStyle}
                 InputProps={iprops}
                 InputLabelProps={iprops}
                 FormHelperTextProps={iprops}
-                select  
+                select
                 value={childrenSelection}
                 defaultValue={null}
                 label="SUB CATEGORY"
@@ -183,50 +227,106 @@ export default function Form() {
                   </MenuItem>
                 ))}
               </TextField>
-              <div 
+              <div
                 className="subButton"
                 style={{
-                  display: "none",
-                  justifyContent: "flex-end",
+                  display: toggleOther,
+                  justifyContent: "space-between",
                   width: "100%",
                   flexWrap: "wrap",
                 }}
               >
-                <Button
-                  onClick={async () => {
-                    await setTrainings([]);
-                    await setSelection(categories[0].value);
-                    const tempChildren = [];
-                    await CATEGORY.forEach((cat) => {
-                      console.log(cat.ancestry === categories[0].value.toString());
-                      if (cat.ancestry === categories[0].value.toString()) {
-                        tempChildren.push({
-                          value: cat.id,
-                          label: cat.name,
-                        });
-                      }
-                    });
-                    await setChildren(tempChildren);
-                    await setChildrenSelection(tempChildren[0].value);
+                <TextField
+                  onChange={(e) => {
+                    setCustomTraining(e.target.value);
                   }}
-                  sx={{ padding: "10px", minWidth: "180px" }}
-                  variant="contained"
-                  color="error"
-                  endIcon={<ClearIcon />}
-                >
-                  CLEAR
-                </Button>
+                  sx={{
+                    minWidth: "42%",
+                  }}
+                  InputProps={iprops}
+                  InputLabelProps={iprops}
+                  FormHelperTextProps={iprops}
+                  label="NEW TRAINING"
+                  value={customTraining}
+                  defaultValue={customTraining}
+                ></TextField>
                 <div className="space"></div>
-
-                <Button
-                  onClick={handleSubmit}
-                  sx={{ padding: "10px", minWidth: "180px" }}
-                  variant="contained"
-                  color="success"
-                  endIcon={<FilterListIcon />}
+                <TextField
+                  onChange={(e) => {
+                    setSeason(e.target.value);
+                  }}
+                  sx={{
+                    minWidth: "42%",
+                  }}
+                  InputProps={iprops}
+                  InputLabelProps={iprops}
+                  FormHelperTextProps={iprops}
+                  select
+                  label="PICK A QUARTER"
+                  value={season}
+                  defaultValue={season}
                 >
-                  FILTER
-                </Button>
+                  {seasons.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <div className="space"></div>
+                <div className="button">
+                  <LoadingButton
+                    loading={submitNewTraining}
+                    onClick={async () => {
+                      if (parseInt(localStorage.getItem("trainings")) < 1) {
+                        setSubmitNewTraining(true);
+                        const trainingAdded = await newTraining({
+                          training_title: customTraining,
+                          training_type: categories.filter(
+                            (child) => child.value === selection
+                          )[0]["label"],
+                          category_id: childrenSelection,
+                        });
+                        if (trainingAdded !== null) {
+                          await postTraining({
+                            training_id: trainingAdded,
+                            season: season,
+                            employee_id: decodedToken["employee_id"],
+                          });
+
+                          if (postTraining) {
+                            setCustomTrainingsAmount(customTrainingsAmount + 1);
+                            localStorage.setItem(
+                              "trainings",
+                              customTrainingsAmount + 1
+                            );
+                            setAlertMessage("Training added successfully");
+                            setAlertPriority("success");
+                            setAlertOpen(true);
+                            setSubmitNewTraining(false);
+                            setToggleOther('none')
+                          } else {
+                            setAlertMessage(
+                              "Training not added, please try again"
+                            );
+                            setAlertOpen(true);
+                            setSubmitNewTraining(false);
+                          }
+                        }
+                      } else {
+                        setAlertMessage("You can add one custom training");
+                        setAlertPriority("error");
+                        setAlertOpen(true);
+                        setSubmitNewTraining(false);
+                        setToggleOther('none')
+                      }
+                    }}
+                    sx={{ padding: "14px", minWidth: "120px" }}
+                    variant="contained"
+                    color="success"
+                  >
+                    SUBMIT
+                  </LoadingButton>
+                </div>
               </div>
             </div>
           </div>
@@ -239,6 +339,7 @@ export default function Form() {
                 loading={loading}
                 selectedSeasons={selectedSeasons}
                 setSelectedSeasons={setSelectedSeasons}
+                customTrainingsAmount={customTrainingsAmount}
               ></DataTable>
             </div>
           </Container>
