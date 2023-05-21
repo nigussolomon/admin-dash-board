@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import LoginScreen from "../pages/auth/login";
 import Block from "../pages/auth/trainingBlock";
 import Success from "../pages/auth/trainingSuccess";
-import AdminLoginScreen from "../pages/auth/adminLogin";
 import Home from "../pages/home/home";
 import Form from "../pages/form/form";
 import OtpScreen from "../pages/auth/otp";

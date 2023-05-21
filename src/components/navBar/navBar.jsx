@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import "./nav.css";
 import jwt_decode from "jwt-decode";
 
-export default function NavBar() {
+export default function NavBar({disabledForm, disabledDash}) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   if (token != null) {
@@ -70,6 +70,7 @@ export default function NavBar() {
             {decodedToken["role"] === "admin" ? (
               <>
                 <Button
+                  disabled={disabledForm == null? false : true}
                   onClick={() => navigate("/form")}
                   lick
                   variant="contained"
@@ -86,6 +87,8 @@ export default function NavBar() {
                 </Button>
                 <div className="space"></div>
                 <Button
+                  
+                  disabled={disabledDash == null? false : true}
                   onClick={() => navigate("/home")}
                   lick
                   variant="contained"

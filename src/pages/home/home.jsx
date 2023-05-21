@@ -127,7 +127,7 @@ export default function Home() {
   } else {
     return (
       <div>
-        <NavBar />
+        <NavBar disabledDash={true}/>
         <Container maxWidth="xl">
           <h1>TRAINING NEED ASSESMENT </h1>
           <Divider />

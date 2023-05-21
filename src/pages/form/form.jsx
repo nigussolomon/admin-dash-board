@@ -152,7 +152,7 @@ export default function Form() {
   } else {
     return (
       <>
-        <NavBar />
+        <NavBar disabledForm={true}/>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           open={alertOpen}
