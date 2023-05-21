@@ -33,12 +33,15 @@ export default function StickyHeadTable({rows, loading}) {
   };
 
   if (loading) {
+    setTimeout(async () => {
+      await setPage(0)
+    }, 0)
     return(
     <Box sx={{ width: '100%' }}>
-      <Skeleton sx={{ height: '5vh' }}/>
-      <Skeleton sx={{ height: '5vh' }}/>
-      <Skeleton sx={{ height: '5vh' }} animation="wave" />
-      <Skeleton sx={{ height: '5vh' }} animation="wave" />
+      <Skeleton sx={{ height: '8vh' }}/>
+      <Skeleton sx={{ height: '8vh' }}/>
+      <Skeleton sx={{ height: '8vh' }} animation="wave" />
+      <Skeleton sx={{ height: '8vh' }} animation="wave" />
     </Box>
     );
   } else {

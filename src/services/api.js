@@ -41,7 +41,6 @@ export const adminFilterTraining = async (filters) => {
     }
   );
   const jsonData = await response.json();
-  console.log(jsonData);
   return jsonData;
 };
 
@@ -58,7 +57,6 @@ export const authenticate = async (email) => {
     }),
   });
   const res = await response.json();
-  console.log(res["message"]);
   if (res["message"] !== undefined) {
     return true;
   } else {
@@ -77,9 +75,7 @@ export const postTraining = async (data) => {
       employee_training: data,
     }),
   });
-  console.log(response.status);
   const res = await response.json();
-  console.log(res["message"]);
   if (response.status === 201) {
     return true;
   } else {

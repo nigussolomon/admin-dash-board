@@ -34,6 +34,7 @@ import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 import ClearIcon from "@mui/icons-material/Clear";
 import { postTraining } from "../../services/api";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { id: "title", label: "Training Title", minWidth: 370 },
@@ -76,6 +77,7 @@ export default function StickyHeadTable({
     }
     setDialogOpen(updatedDialogOpen);
   };
+  const navigate = useNavigate();
 
   const SubmitTraings = async () => {
     await setSubmitNewTraining(true);
@@ -89,8 +91,9 @@ export default function StickyHeadTable({
         setAlertOpen(true);
         setTrainingList([]);
         setSubmitNewTraining(false);
+        await navigate("/done");
       }
-    });
+    })
   };
 
   const handleSeasonChange = (rowIndex, event) => {
@@ -260,6 +263,7 @@ export default function StickyHeadTable({
                                         onClick={() => {
                                           setAlertOpen(false);
                                           var pass = true;
+                                          localStorage.getItem('trainings') !== null ? localStorage.getItem('trainings') : localStorage.setItem('trainings', '0');
                                           if (trainingList.length + parseInt(localStorage.getItem('trainings')) < 5) {
                                             trainingList.forEach((training) => {
                                               if (

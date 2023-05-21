@@ -7,8 +7,7 @@ import jwt_decode from "jwt-decode";
 
 function isAuthenticated() {
   const token = localStorage.getItem("token");
-  const decodedToken = jwt_decode(token);
-  if (token !== null && token !== undefined) {
+  if (token !== null) {
     return true;
   } else {
     return false;
@@ -21,7 +20,8 @@ async function canApply() {
   const pass = await adminFilterTraining(
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
-  if (pass.length >= 5) {
+
+  if (pass.length >= 5 && decodedToken['role'] !== 'admin') {
     return false;
   } else {
     return true;

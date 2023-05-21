@@ -277,7 +277,7 @@ export default function Form() {
                   <LoadingButton
                     loading={submitNewTraining}
                     onClick={async () => {
-                      if (parseInt(localStorage.getItem("trainings")) < 1) {
+                      if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
                         const trainingAdded = await newTraining({
                           training_title: customTraining,
