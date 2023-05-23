@@ -11,6 +11,18 @@ export const fetchCategories = async () => {
   return jsonData;
 };
 
+export const fetchEmployees = async () => {
+  const response = await fetch(api_link+"/employees", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token"),
+    },
+  });
+  const jsonData = await response.json();
+  return jsonData;
+};
+
 export const filterTraining = async (id) => {
   console.log("please help me!");
   const response = await fetch(
