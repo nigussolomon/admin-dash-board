@@ -407,7 +407,7 @@ export default function StickyHeadTable({
                                   select
                                   autoFocus
                                   margin="dense"
-                                  label="Season"
+                                  label="Quarter"
                                   type="text"
                                   fullWidth
                                   value={seasonNew}
@@ -431,7 +431,7 @@ export default function StickyHeadTable({
                                   }}
                                   type="submit"
                                 >
-                                  Update Season
+                                  Update Quarter
                                 </Button>
                               </form>
                             </DialogContent>
