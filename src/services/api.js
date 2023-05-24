@@ -1,6 +1,18 @@
-const api_link = "https://bunnabanktna.onrender.com"
+const api_link = process.env.REACT_APP_API_URL
 export const fetchCategories = async () => {
   const response = await fetch(api_link+"/categories", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token"),
+    },
+  });
+  const jsonData = await response.json();
+  return jsonData;
+};
+
+export const fetchEmployees = async () => {
+  const response = await fetch(api_link+"/employees", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -28,6 +40,22 @@ export const filterTraining = async (id) => {
   return jsonData;
 };
 
+export const adminFilterTraining = async (filters) => {
+  console.log("please help me!");
+  const response = await fetch(
+    api_link+"/employee_trainings?"+filters,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    }
+  );
+  const jsonData = await response.json();
+  return jsonData;
+};
+
 export const authenticate = async (email) => {
   const response = await fetch(api_link+"/send_otp", {
     method: "POST",
@@ -41,7 +69,6 @@ export const authenticate = async (email) => {
     }),
   });
   const res = await response.json();
-  console.log(res["message"]);
   if (res["message"] !== undefined) {
     return true;
   } else {
@@ -60,11 +87,28 @@ export const postTraining = async (data) => {
       employee_training: data,
     }),
   });
-  console.log(response.status);
   const res = await response.json();
-  console.log(res["message"]);
   if (response.status === 201) {
     return true;
+  } else {
+    return res["error"];
+  }
+};
+
+export const newTraining = async (data) => {
+  const response = await fetch(api_link+"/trainings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      training: data,
+    }),
+  });
+  const res = await response.json();
+  if (response.status === 201) {
+    return res['id'];
   } else {
     return res["error"];
   }

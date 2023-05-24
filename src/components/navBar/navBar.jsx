@@ -5,16 +5,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useNavigate } from "react-router-dom";
 import "./nav.css";
 import jwt_decode from "jwt-decode";
 
-export default function NavBar() {
+export default function NavBar({disabledForm, disabledDash}) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  if (token != null ) {
+  if (token != null) {
     var decodedToken = jwt_decode(token);
-  } 
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -42,7 +44,9 @@ export default function NavBar() {
                 <img src={logo} alt="bunnaBank" />
               </div>
               <div className="user">
-                <h4>{decodedToken['email']} | {decodedToken['name']}</h4>
+                <h4>
+                  {decodedToken["email"]} | {decodedToken["name"]}
+                </h4>
               </div>
             </div>
           </Toolbar>
@@ -63,6 +67,45 @@ export default function NavBar() {
           }}
         >
           <Toolbar disableGutters>
+            {decodedToken["role"] === "admin" ? (
+              <>
+                <Button
+                  disabled={disabledForm == null? false : true}
+                  onClick={() => navigate("/form")}
+                  lick
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{
+                    backgroundColor: "var(--primary-color)",
+                    "&:hover": { backgroundColor: "var(--primary-color)" },
+                    "&:focus": { backgroundColor: "var(--primary-color)" },
+                  }}
+                  endIcon={<ListAltIcon />}
+                >
+                  TRAINING FORM
+                </Button>
+                <div className="space"></div>
+                <Button
+                  
+                  disabled={disabledDash == null? false : true}
+                  onClick={() => navigate("/home")}
+                  lick
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{
+                    backgroundColor: "var(--primary-color)",
+                    "&:hover": { backgroundColor: "var(--primary-color)" },
+                    "&:focus": { backgroundColor: "var(--primary-color)" },
+                  }}
+                  endIcon={<DashboardIcon />}
+                >
+                  DASHBOARD
+                </Button>
+                <div className="space"></div>
+              </>
+            ) : null}
             <Button
               onClick={handleSubmit}
               lick

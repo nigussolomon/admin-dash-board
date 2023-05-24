@@ -6,6 +6,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import { verifyAuthenticate } from "../../services/api.js";
+import jwt_decode from "jwt-decode";
 
 export default function OtpScreen() {
   const navigate = useNavigate();
@@ -21,20 +22,24 @@ export default function OtpScreen() {
     e.preventDefault();
     setLoad(true);
     setAlertOpen(false);
-    const yes = await verifyAuthenticate(
-      otp
-    );
+    const yes = await verifyAuthenticate(otp);
     if (yes === true) {
-      localStorage.setItem("isAdmin", "false");
+      const token = localStorage.getItem("token");
+      const decodedToken = jwt_decode(token);
+      if (decodedToken.role === "admin") {
+        return navigate("/home");
+      } 
       setTimeout(() => {
         setLoad(false);
         return navigate("/form");
       }, 1500);
     } else {
-      setAlertPriority('error')
+      setAlertPriority("error");
       setAlertOpen(true);
       setLoad(false);
-      setAlertMessage('The otp you entered is incorrect please check your email and try again!')
+      setAlertMessage(
+        "The otp you entered is incorrect please check your email and try again!"
+      );
     }
     setTimeout(() => {
       setLoad(false);

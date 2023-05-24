@@ -33,6 +33,8 @@ import IconButton from "@mui/material/IconButton";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 import ClearIcon from "@mui/icons-material/Clear";
 import { postTraining } from "../../services/api";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { id: "title", label: "Training Title", minWidth: 370 },
@@ -44,6 +46,7 @@ export default function StickyHeadTable({
   loading,
   selectedSeasons,
   setSelectedSeasons,
+  customTrainingsAmount
 }) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -56,6 +59,7 @@ export default function StickyHeadTable({
     Array.from({ length: 5 }, () => false)
   );
   const [uniqId, setUniqId] = useState(0);
+  const [submitNewTraining, setSubmitNewTraining] = useState(false);
   const token = localStorage.getItem("token");
   const decodedToken = jwt_decode(token);
 
@@ -73,8 +77,10 @@ export default function StickyHeadTable({
     }
     setDialogOpen(updatedDialogOpen);
   };
+  const navigate = useNavigate();
 
   const SubmitTraings = async () => {
+    await setSubmitNewTraining(true);
     await trainingList.forEach(async (train) => {
       delete train["title"];
       delete train["id"];
@@ -84,8 +90,10 @@ export default function StickyHeadTable({
         setAlertPriority("success");
         setAlertOpen(true);
         setTrainingList([]);
+        setSubmitNewTraining(false);
+        await navigate("/done");
       }
-    });
+    })
   };
 
   const handleSeasonChange = (rowIndex, event) => {
@@ -245,6 +253,7 @@ export default function StickyHeadTable({
                                         ))}
                                       </TextField>
                                       <Button
+                                      
                                         sx={{
                                           padding: "10px",
                                           minWidth: "50px",
@@ -254,7 +263,8 @@ export default function StickyHeadTable({
                                         onClick={() => {
                                           setAlertOpen(false);
                                           var pass = true;
-                                          if (trainingList.length < 5) {
+                                          localStorage.getItem('trainings') !== null ? localStorage.getItem('trainings') : localStorage.setItem('trainings', '0');
+                                          if (trainingList.length + parseInt(localStorage.getItem('trainings')) < 5) {
                                             trainingList.forEach((training) => {
                                               if (
                                                 training["title"] ===
@@ -447,7 +457,8 @@ export default function StickyHeadTable({
                         CLEAR
                       </Button>
                       <div className="space"></div>
-                      <Button
+                      <LoadingButton
+                        loading={submitNewTraining}
                         onClick={SubmitTraings}
                         sx={{ padding: "10px", minWidth: "150px" }}
                         variant="contained"
@@ -455,7 +466,7 @@ export default function StickyHeadTable({
                         endIcon={<SaveIcon />}
                       >
                         SUBMIT
-                      </Button>
+                      </LoadingButton>
                     </div>
                   </>
                 ) : (

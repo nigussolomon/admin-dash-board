@@ -40,7 +40,6 @@ export default function AdminLoginScreen() {
     e.preventDefault();
     setLoad(true);
     if (email === "admin@admin.com" && password === "admin") {
-      localStorage.setItem("token", "sometoken");
       localStorage.setItem("isAdmin", "true");
       setTimeout(() => {
         setLoad(false);
