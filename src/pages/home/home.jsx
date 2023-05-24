@@ -194,7 +194,7 @@ export default function Home() {
           <h1>TRAINING NEED ASSESMENT </h1>
           <Divider />
           <div className="filters">
-            <TextField
+            {/* <TextField
               onChange={categoryChange}
               sx={textStyle}
               InputProps={iprops}
@@ -233,7 +233,7 @@ export default function Home() {
                   {option.label}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
 
             <TextField
               onChange={async (e) => {
