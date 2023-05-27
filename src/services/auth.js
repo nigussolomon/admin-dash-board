@@ -21,7 +21,7 @@ async function canApply() {
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
 
-  if (pass.length >= 5 && decodedToken['role'] !== 'admin') {
+  if (pass.length >= 5) {
     return false;
   } else {
     return true;
