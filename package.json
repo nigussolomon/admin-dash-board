@@ -49,5 +49,8 @@
   "main": "index.js",
   "repository": "https://github.com/BUNNA-BANK-SOFTWARE/admin-dash-board.git",
   "author": "nigussolomon <nigussolomon444@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@wixc3/react-board": "2.2.0"
+  }
 }
