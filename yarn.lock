@@ -2678,6 +2678,18 @@
     "@webassemblyjs/ast" "1.11.5"
     "@xtuc/long" "4.2.2"
 
+"@wixc3/board-core@^2.2.0":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@wixc3/board-core/-/board-core-2.2.1.tgz#2f439202bdc44bef74e01e10b1ebdbd570a553fa"
+  integrity sha512-qgH27C0//bWq17FqdbudTTqBjd4Q7obuenC7fqtw/sEa6B39N9j6HzXeMPzEte3+W1v4dZnSGaPRn/BV/E0SYA==
+
+"@wixc3/react-board@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@wixc3/react-board/-/react-board-2.2.0.tgz#108cc19a1b82e75ff25846a19fd7a54f67dd3af4"
+  integrity sha512-t/tVCPl6zTl2A2v8SDrTUb6h1Gl/QokjVlg0e+4qpdfJrBvAhuFeq3LS/fnGtVeIXzoMuI7RSSQQumQ8Z3Rcuw==
+  dependencies:
+    "@wixc3/board-core" "^2.2.0"
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@xtuc/ieee754/-/ieee754-1.2.0.tgz"

@@ -28,7 +28,7 @@ const iprops = {
 };
 
 export default function Home() {
-  const [state, setState] = useState(0)
+  const [state, setState] = useState(0);
   const [selection, setSelection] = useState("");
   const [fullLoad, setFullLoad] = useState(true);
   const [CATEGORY, setCATEGORY] = useState([]);
@@ -41,36 +41,41 @@ export default function Home() {
   const [disable, setDisable] = useState(false);
   const [region, setRegion] = useState("");
   const [dept, setDept] = useState("");
-  const [uniqDept, setUniqDept] = useState([])
-  const [uniqLoc, setUniqLoc] = useState([])
+  const [uniqDept, setUniqDept] = useState([]);
+  const [uniqLoc, setUniqLoc] = useState([]);
 
   function extractUniqueDepartments(responses) {
     const uniqueDepartments = [];
     const uniqueRegions = [];
-    
+
     responses.forEach((response) => {
       const department = response.department;
       const location = response.location;
-      const existingDepartment = uniqueDepartments.find((dep) => dep.value === department);
-      const existingLocation = uniqueRegions.find((dep) => dep.value === location);
+      const existingDepartment = uniqueDepartments.find(
+        (dep) => dep.value === department
+      );
+      const existingLocation = uniqueRegions.find(
+        (dep) => dep.value === location
+      );
       if (!existingDepartment) {
         uniqueDepartments.push({
           value: department,
-          label: department
+          label: department,
         });
       }
-      if(!existingLocation){
+      if (!existingLocation) {
         uniqueRegions.push({
           value: location,
-          label: location
-        })
+          label: location,
+        });
       }
     });
-    setUniqDept(uniqueDepartments)
-    setUniqLoc(uniqueRegions)
+    setUniqDept(uniqueDepartments);
+    setUniqLoc(uniqueRegions);
   }
 
-  function filterData(data, quarter, location, department) {
+  function filterData(data, quarter, location, department, category_id) {
+    console.log("ggggggg" + category_id);
     return data.filter((item) => {
       if (quarter && item.season !== quarter) {
         return false;
@@ -84,6 +89,10 @@ export default function Home() {
         return false;
       }
 
+      if (category_id && item.training.category_id !== category_id) {
+        return false;
+      }
+
       return true;
     });
   }
@@ -91,27 +100,42 @@ export default function Home() {
   const clear = () => {
     setDept(null);
     setRegion(null);
-    setSeason(null)
+    setSeason(null);
     setChildrenSelection(null);
     setRows([]);
 
     console.log(region);
     console.log(dept);
-  }
+  };
 
-  const categoryChange = (e) => {
-    setSelection(e.target.value);
+  const categoryChange = async (e) => {
+    await setSelection(e.target.value);
+    const tempChildren = [];
+    await CATEGORY.forEach((cat) => {
+      console.log(cat.ancestry === e.target.value.toString());
+      if (cat.ancestry === e.target.value.toString()) {
+        tempChildren.push({
+          value: cat.id,
+          label: cat.name,
+        });
+      }
+    });
+    await setChildren(tempChildren);
+    await setChildrenSelection("");
   };
 
   const handleSubmit = async () => {
     setDisable(true);
     setLoading(true);
     const tempTrainings = [];
-    // const data = await adminFilterTraining("q[season_eq]=" + season);
     const data = await adminFilterTraining("");
-    const filteredData = await filterData(data, season, region, dept);
-
-    console.log(filteredData);
+    const filteredData = await filterData(
+      data,
+      season,
+      region,
+      dept,
+      childrenSelection
+    );
 
     await filteredData.forEach((train) => {
       console.log(train);
@@ -151,7 +175,7 @@ export default function Home() {
         });
       }
     });
-    await extractUniqueDepartments(emp)
+    await extractUniqueDepartments(emp);
     await setSelection(tempCat[0].value);
     setChildren(tempChildren);
     setCategories(tempCat);
@@ -194,7 +218,7 @@ export default function Home() {
           <h1>TRAINING NEED ASSESMENT </h1>
           <Divider />
           <div className="filters">
-            {/* <TextField
+            <TextField
               onChange={categoryChange}
               sx={textStyle}
               InputProps={iprops}
@@ -233,7 +257,7 @@ export default function Home() {
                   {option.label}
                 </MenuItem>
               ))}
-            </TextField> */}
+            </TextField>
 
             <TextField
               onChange={async (e) => {
