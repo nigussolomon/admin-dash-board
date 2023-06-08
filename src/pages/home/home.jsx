@@ -141,6 +141,7 @@ export default function Home() {
       console.log(train);
       tempTrainings.push(
         createData(
+          train["employee"]["id"],
           train["employee"]["full_name"],
           train["employee"]["email"],
           train["employee"]["department"],

@@ -1,4 +1,5 @@
 export function createData(
+  id,
   name,
   email,
   department,
@@ -6,7 +7,7 @@ export function createData(
   trainingTitle,
   date
 ) {
-  return { name, email, department, region, trainingTitle, date };
+  return { id, name, email, department, region, trainingTitle, date };
 }
 
 export function createTrainings(id, category, title, season) {
