@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 
 const columns = [
+  { id: 'id', label: 'Employee ID', minWidth: 90 },
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'email', label: 'Email', minWidth: 100 },
   { id: 'department', label: 'Department', minWidth: 170, },

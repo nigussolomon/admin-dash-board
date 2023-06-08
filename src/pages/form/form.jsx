@@ -56,8 +56,8 @@ export default function Form() {
       console.log(train.training_title);
       tempTrainings.push(
         createTrainings(
-          train["id"],
-          train["category"]["id"],
+          train['id'],
+          train["category_id"],
           train.training_title,
           "test"
         )
