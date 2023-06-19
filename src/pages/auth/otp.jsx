@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo_alt from "../../assets/logo_alt.svg";
 import { TextField, InputAdornment, Snackbar, Alert } from "@mui/material";
 import "../../assets/variables.css";
@@ -17,6 +17,34 @@ export default function OtpScreen() {
     "A One Time Password for authentication has been sent to your email check your email and enter it here to continue, please don't share your code with anyone as it is confidential and only for your eyes!"
   );
   const [alertPriority, setAlertPriority] = useState("info");
+  const DISABLE_DURATION = 300000; // 5 minutes in milliseconds
+  const [disabled, setDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(DISABLE_DURATION / 1000);
+
+  useEffect(() => {
+    const timestamp = localStorage.getItem("buttonDisabledTimestamp");
+    if (timestamp) {
+      const diff = DISABLE_DURATION - (Date.now() - timestamp);
+      if (diff > 0) {
+        setDisabled(true);
+        setCountdown(Math.ceil(diff / 1000));
+        const intervalId = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            const newCountdown = prevCountdown - 1;
+            if (newCountdown === 0) {
+              clearInterval(intervalId);
+              setDisabled(false);
+              localStorage.removeItem("buttonDisabledTimestamp");
+              navigate("/")
+            }
+            return newCountdown;
+          });
+        }, 1000);
+      } else {
+        localStorage.removeItem("buttonDisabledTimestamp");
+      }
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +153,7 @@ export default function OtpScreen() {
         >
           AUTHENTICATE
         </LoadingButton>
+        <p>Your otp will expire in {countdown}s</p>
       </form>
     </>
   );

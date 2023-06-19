@@ -32,7 +32,6 @@ export default function LoginScreen() {
               clearInterval(intervalId);
               setDisabled(false);
               localStorage.removeItem("buttonDisabledTimestamp");
-              navigate("/otp");
             }
             return newCountdown;
           });
