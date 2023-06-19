@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo_alt from "../../assets/logo_alt.svg";
 import { TextField, InputAdornment, Snackbar, Alert } from "@mui/material";
 import "../../assets/variables.css";
@@ -7,28 +7,71 @@ import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import { authenticate } from "../../services/api";
 
+const DISABLE_DURATION = 300000; // 5 minutes in milliseconds
+
 export default function LoginScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [load, setLoad] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(DISABLE_DURATION / 1000);
+
+  useEffect(() => {
+    const timestamp = localStorage.getItem("buttonDisabledTimestamp");
+    if (timestamp) {
+      const diff = DISABLE_DURATION - (Date.now() - timestamp);
+      if (diff > 0) {
+        setDisabled(true);
+        setCountdown(Math.ceil(diff / 1000));
+        const intervalId = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            const newCountdown = prevCountdown - 1;
+            if (newCountdown === 0) {
+              clearInterval(intervalId);
+              setDisabled(false);
+              localStorage.removeItem("buttonDisabledTimestamp");
+              navigate("/otp");
+            }
+            return newCountdown;
+          });
+        }, 1000);
+      } else {
+        localStorage.removeItem("buttonDisabledTimestamp");
+      }
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (disabled) return;
     setLoad(true);
     setAlertOpen(false);
-    const yes =  await authenticate(email); 
-    console.log(yes)
+    const yes = await authenticate(email);
+    console.log(yes);
     if (yes === true) {
       localStorage.setItem("tempEmail", email);
-      setTimeout(() => {
-        setLoad(false);
-        return navigate("/otp");
-      }, 1500);
+      setDisabled(true);
+      setCountdown(DISABLE_DURATION / 1000);
+      localStorage.setItem("buttonDisabledTimestamp", Date.now());
+      const intervalId = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          const newCountdown = prevCountdown - 1;
+          if (newCountdown === 0) {
+            clearInterval(intervalId);
+            setDisabled(false);
+            localStorage.removeItem("buttonDisabledTimestamp");
+          }
+          navigate("/otp");
+          return newCountdown;
+        });
+      }, 1000);
     } else {
       setLoad(false);
-      setErrorMsg("Email not found, please try with your Bunna Bank company email!");
+      setErrorMsg(
+        "Email not found, please try with your Bunna Bank company email!"
+      );
       setAlertOpen(true);
     }
     setTimeout(() => {
@@ -90,7 +133,10 @@ export default function LoginScreen() {
           InputProps={{
             styles: {
               root: {
-                "&$focused": { outline: "none", fontFamily: "var(--font)" },
+                "&$focused": {
+                  outline: "none",
+                  fontFamily: "var(--font)",
+                },
               },
             },
             autoComplete: "off",
@@ -103,20 +149,21 @@ export default function LoginScreen() {
         />
         <LoadingButton
           loading={load}
+          disabled={disabled}
           variant="contained"
           color="primary"
           type="submit"
           sx={{
             width: "100%",
-            maxWidth: "400px",
-            backgroundColor: "#541718",
+            maxWidth:"400px",
+            backgroundColor: disabled ? "#999" : "#541718",
             padding: "1rem",
             fontFamily: "var(--font)",
-            "&:hover": { backgroundColor: "#541718" },
-            "&:focus": { backgroundColor: "#541718" },
+            "&:hover": { backgroundColor: disabled ? "#999" : "#541718" },
+            "&:focus": { backgroundColor: disabled ? "#999" : "#541718" },
           }}
         >
-          SEND OTP
+          {disabled ? `Please wait ${countdown}s` : "SEND OTP"}
         </LoadingButton>
       </form>
     </>
