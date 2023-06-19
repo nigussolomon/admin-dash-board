@@ -41,6 +41,8 @@ export default function Form() {
   const [alertPriority, setAlertPriority] = useState("error");
   const [alertMessage, setAlertMessage] = useState("");
   const [submitNewTraining, setSubmitNewTraining] = useState(false);
+  const [page, setPage] = useState(0);
+
 
   function handleClose() {
     setAlertOpen(false);
@@ -104,6 +106,7 @@ export default function Form() {
   };
 
   const categoryChange = async (e) => {
+    setPage(0)
     setToggleOther("none");
     await setSelection(e.target.value);
     const tempChildren = [];
@@ -195,6 +198,7 @@ export default function Form() {
 
               <TextField
                 onChange={async (e) => {
+                  setPage(0)
                   console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
                   console.log(
@@ -340,6 +344,8 @@ export default function Form() {
                 selectedSeasons={selectedSeasons}
                 setSelectedSeasons={setSelectedSeasons}
                 customTrainingsAmount={customTrainingsAmount}
+                page={page}
+                setPage={setPage}
               ></DataTable>
             </div>
           </Container>

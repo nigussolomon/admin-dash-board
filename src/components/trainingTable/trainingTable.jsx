@@ -46,12 +46,13 @@ export default function StickyHeadTable({
   loading,
   selectedSeasons,
   setSelectedSeasons,
-  customTrainingsAmount
+  customTrainingsAmount,
+  page,
+  setPage
 }) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertPriority, setAlertPriority] = useState("error");
-  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [seasonNew, setSeasonNew] = useState(seasons[0].value);
   const [trainingList, setTrainingList] = useState([]);
@@ -264,7 +265,7 @@ export default function StickyHeadTable({
                                           setAlertOpen(false);
                                           var pass = true;
                                           localStorage.getItem('trainings') !== null ? localStorage.getItem('trainings') : localStorage.setItem('trainings', '0');
-                                          if (trainingList.length + parseInt(localStorage.getItem('trainings')) < 5) {
+                                          if (trainingList.length + parseInt(localStorage.getItem('trainings')) < 3) {
                                             trainingList.forEach((training) => {
                                               if (
                                                 training["title"] ===
