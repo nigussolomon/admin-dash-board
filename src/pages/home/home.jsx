@@ -75,26 +75,29 @@ export default function Home() {
   }
 
   function filterData(data, quarter, location, department, category_id) {
-    console.log("ggggggg" + category_id);
-    return data.filter((item) => {
-      if (quarter && item.season !== quarter) {
-        return false;
-      }
-
-      if (location && item.employee.location !== location) {
-        return false;
-      }
-
-      if (department && item.employee.department !== department) {
-        return false;
-      }
-
-      if (category_id && item.training.category_id !== category_id) {
-        return false;
-      }
-
-      return true;
-    });
+    if (quarter && location && department && category_id) {
+      return true
+    } else {
+      return data.filter((item) => {
+        if (quarter && item.season !== quarter) {
+          return false;
+        }
+  
+        if (location && item.employee.location !== location) {
+          return false;
+        }
+  
+        if (department && item.employee.department !== department) {
+          return false;
+        }
+  
+        if (category_id && item.training.category_id !== category_id) {
+          return false;
+        }
+  
+        return true;
+      });
+    }
   }
 
   const clear = () => {
@@ -177,7 +180,7 @@ export default function Home() {
       }
     });
     await extractUniqueDepartments(emp);
-    await setSelection(tempCat[0].value);
+    // await setSelection(tempCat[0].value);
     setChildren(tempChildren);
     setCategories(tempCat);
   };
