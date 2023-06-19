@@ -23,6 +23,10 @@ export default function OtpScreen() {
 
   useEffect(() => {
     const timestamp = localStorage.getItem("buttonDisabledTimestamp");
+    const email = localStorage.getItem("tempEmail")
+    if (email === null){
+      navigate("/")
+    }
     if (timestamp) {
       const diff = DISABLE_DURATION - (Date.now() - timestamp);
       if (diff > 0) {
@@ -153,7 +157,8 @@ export default function OtpScreen() {
         >
           AUTHENTICATE
         </LoadingButton>
-        <p>Your otp will expire in {countdown}s</p>
+        
+        <p>{localStorage.getItem("buttonDisabledTimestamp") !== null ? `Your otp will expire in ${countdown}s` : ""}</p>
       </form>
     </>
   );

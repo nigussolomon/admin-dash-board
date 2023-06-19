@@ -21,6 +21,8 @@ export default function NavBar({disabledForm, disabledDash}) {
     e.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("isAdmin");
+    localStorage.removeItem("tempEmail");
+    localStorage.removeItem("buttonDisabledTimestamp");
     navigate("/");
   };
   return (
