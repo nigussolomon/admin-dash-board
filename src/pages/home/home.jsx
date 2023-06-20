@@ -43,6 +43,7 @@ export default function Home() {
   const [dept, setDept] = useState("");
   const [uniqDept, setUniqDept] = useState([]);
   const [uniqLoc, setUniqLoc] = useState([]);
+  const [disableExport, setDisableExport] = useState(true);
 
   const columns = [
     { id: 'id', label: 'Employee ID', minWidth: 90 },
@@ -149,6 +150,7 @@ export default function Home() {
   const handleSubmit = async () => {
     setDisable(true);
     setLoading(true);
+    setDisableExport(true)
     const tempTrainings = [];
     const data = await adminFilterTraining("");
     const filteredData = await filterData(
@@ -176,6 +178,7 @@ export default function Home() {
     await setRows(tempTrainings);
     setLoading(false);
     setDisable(false);
+    setDisableExport(false)
   };
 
   const fetchData = async () => {
@@ -380,6 +383,7 @@ export default function Home() {
         ) : (
           <Container maxWidth="xl">
             <div className="dataTable">
+            <Divider/>
               <div
                 className="title"
                 style={{ display: "flex", justifyContent: "space-between" }}
@@ -387,6 +391,7 @@ export default function Home() {
                 <h2>TRAINEE LIST</h2>
                 <Button
                   variant="contained"
+                  disabled={disableExport}
                   color="success"
                   sx={{
                     padding: ".5%",
@@ -396,9 +401,14 @@ export default function Home() {
                     marginLeft: 0,
                     marginRight: 0,
                   }}
-                  onClick={() => {
-                    const workbook = convertToWorkbook(rows, columns);
-                    writeFile(workbook, "trainingData.xlsx");
+                  onClick={async () => {
+                    await setDisableExport(true)
+                    const workbook = await convertToWorkbook(rows, columns);
+                    setTimeout(async () => {
+                      await writeFile(workbook, "trainingData.xlsx");
+                      setDisableExport(false)
+                    }, 50);
+                    
                   }}
                 >
                   Export to Excel
