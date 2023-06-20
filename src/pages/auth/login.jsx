@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import { authenticate } from "../../services/api";
 
-const DISABLE_DURATION = 300000; // 5 minutes in milliseconds
+const DISABLE_DURATION = 180000; // 3 minutes in milliseconds
 
 export default function LoginScreen() {
   const navigate = useNavigate();
