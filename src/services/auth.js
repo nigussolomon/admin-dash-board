@@ -21,7 +21,7 @@ async function canApply() {
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
   localStorage.setItem("totalTrainings", adminFilterTraining.length)
-  if (pass.length >= 3 && decodedToken["role"] !== "admin") {
+  if (pass.length >= 3 ) {
     return false;
   } else {
     return true;
