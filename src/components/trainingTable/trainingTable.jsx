@@ -437,10 +437,10 @@ export default function StickyHeadTable({
                                               setUniqId(uniqId + 1);
                                             }
                                           } else {
+                                            
                                             setAlertPriority("error");
                                             setAlertMessage(
                                               localStorage.getItem('totalTrainings') === 0 ? "You can only chose 3 trainings" : "You have already picked " + localStorage.getItem('totalTrainings') + " in you previous session, and you can only choose 3 trainings"
-                                              
                                             );
                                             setAlertOpen(true);
                                           }
