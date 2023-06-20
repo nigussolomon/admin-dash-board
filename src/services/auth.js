@@ -20,8 +20,8 @@ async function canApply() {
   const pass = await adminFilterTraining(
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
-
-  if (pass.length >= 3 && decodedToken['role'] !== 'admin') {
+  localStorage.setItem("totalTrainings", adminFilterTraining.length)
+  if (pass.length >= 3 && decodedToken["role"] !== "admin") {
     return false;
   } else {
     return true;
