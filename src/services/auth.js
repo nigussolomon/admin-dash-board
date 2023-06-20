@@ -20,6 +20,7 @@ async function canApply() {
   const pass = await adminFilterTraining(
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
+
   localStorage.setItem("totalTrainings", adminFilterTraining.length)
   if (pass.length >= 3 ) {
     return false;
