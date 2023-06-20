@@ -21,9 +21,13 @@ async function canApply() {
     "q[employee_id_eq]=" + decodedToken["employee_id"]
   );
 
-  if (pass.length >= 5) {
+  localStorage.setItem("totalTrainings", pass.length)
+  console.log("gggg "+pass);
+  if (pass.length >= 3 ) {
     return false;
   } else {
+    localStorage.setItem("totalTrainings", pass.length)
+    console.log("gggg "+pass);
     return true;
   }
 }

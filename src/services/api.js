@@ -40,6 +40,23 @@ export const filterTraining = async (id) => {
   return jsonData;
 };
 
+export const filterTraining1 = async (id) => {
+  console.log("please help me!");
+  const response = await fetch(
+    api_link+"/trainings?q[parent_category_eq]=" + id,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    }
+  );
+  const jsonData = await response.json();
+  console.log(jsonData);
+  return jsonData;
+};
+
 export const adminFilterTraining = async (filters) => {
   console.log("please help me!");
   const response = await fetch(

@@ -46,17 +46,26 @@ export default function StickyHeadTable({
   loading,
   selectedSeasons,
   setSelectedSeasons,
-  customTrainingsAmount
+  customTrainingsAmount,
+  page,
+  setPage,
+  otherTraining,
+  setOtherTraining,
+  submitOtherTraining,
 }) {
+  console.log("ggggOOO" + otherTraining);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertPriority, setAlertPriority] = useState("error");
-  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [seasonNew, setSeasonNew] = useState(seasons[0].value);
+  const [seasonNew1, setSeasonNew1] = useState(seasons[0].value);
   const [trainingList, setTrainingList] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(
     Array.from({ length: 5 }, () => false)
+  );
+  const [dialogOpen1, setDialogOpen1] = useState(
+    false
   );
   const [uniqId, setUniqId] = useState(0);
   const [submitNewTraining, setSubmitNewTraining] = useState(false);
@@ -134,12 +143,154 @@ export default function StickyHeadTable({
 
   if (loading) {
     return (
-      <Box sx={{ width: "100%" }}>
+      <div className="trainingTable" style={{display: "flex", justifyContent: 'space-between',}}>
+      <Box sx={{ width: "62%" }}>
         <Skeleton sx={{ height: "8vh" }} />
         <Skeleton sx={{ height: "8vh" }} />
         <Skeleton sx={{ height: "8vh" }} animation="wave" />
         <Skeleton sx={{ height: "8vh" }} animation="wave" />
       </Box>
+
+      <div className="list" style={{minWidth: '35%',}}>
+      <div className="div2">
+            <Divider />
+            <div className="div">
+              <h2>YOUR TRAININGS LIST</h2>
+            </div>
+            <Divider />
+            <br />
+              <div className="trainings" style={{ minHeight: 495 }}>
+                {trainingList.length > 0 ? (
+                  <>
+                    <List>
+                      {trainingList.map((item) => (
+                        <>
+                          <ListItem key={item.id}>
+                            <ListItemText
+                              sx={{
+                                width: "75%",
+                                fontFamily: "var(--font)",
+                                marginRight: "30px",
+                              }}
+                              primary={item.title}
+                              secondary={item.season}
+                            />
+                            <ListItemSecondaryAction>
+                              <>
+                                <IconButton
+                                  edge="end"
+                                  color="error"
+                                  aria-label="delete"
+                                  onClick={() => handleDelete(item.id)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                                <IconButton
+                                  edge="end"
+                                  color="warning"
+                                  aria-label="delete"
+                                  onClick={() => handleDialogOpen(item.id)}
+                                >
+                                  <EditCalendarIcon />
+                                </IconButton>
+                              </>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          <Dialog
+                            sx={{ fontFamily: "var(--font)" }}
+                            open={dialogOpen[item.id]}
+                            onClose={handleDialogClose}
+                          >
+                            <DialogTitle sx={{ fontFamily: "var(--font)" }}>
+                              {item.title}
+                            </DialogTitle>
+                            <DialogContent>
+                              <form
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  trainingList.filter(
+                                    (_item) => _item.id === item.id
+                                  )[0]["season"] = seasonNew;
+                                  setTrainingList(trainingList);
+                                  handleDialogClose(item.id);
+                                }}
+                              >
+                                <TextField
+                                  required
+                                  select
+                                  autoFocus
+                                  margin="dense"
+                                  label="Quarter"
+                                  type="text"
+                                  fullWidth
+                                  value={seasonNew}
+                                  onChange={(e) => {
+                                    setSeasonNew(e.target.value);
+                                  }}
+                                >
+                                  {seasons.map((option) => (
+                                    <MenuItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                                <Button
+                                  sx={{
+                                    fontFamily: "var(--font)",
+                                    color: "var(--primary)",
+                                  }}
+                                  type="submit"
+                                >
+                                  Update Quarter
+                                </Button>
+                              </form>
+                            </DialogContent>
+                          </Dialog>
+                        </>
+                      ))}
+                    </List>
+                    <Divider />
+                    <br />
+                    <div
+                      className="saveBtn"
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setTrainingList([]);
+                        }}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="error"
+                        endIcon={<ClearIcon />}
+                      >
+                        CLEAR
+                      </Button>
+                      <div className="space"></div>
+                      <LoadingButton
+                        loading={submitNewTraining}
+                        onClick={SubmitTraings}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="success"
+                        endIcon={<SaveIcon />}
+                      >
+                        SUBMIT
+                      </LoadingButton>
+                    </div>
+                    <br />
+                    <Divider />
+                  </>
+                ) : (
+                  <h4>No trainings added!</h4>
+                )}
+              </div>
+          </div>
+      </div>
+      </div>
     );
   } else {
     return (
@@ -264,7 +415,8 @@ export default function StickyHeadTable({
                                           setAlertOpen(false);
                                           var pass = true;
                                           localStorage.getItem('trainings') !== null ? localStorage.getItem('trainings') : localStorage.setItem('trainings', '0');
-                                          if (trainingList.length + parseInt(localStorage.getItem('trainings')) < 5) {
+                                          localStorage.getItem('totalTrainings') !== null ? localStorage.getItem('totalTrainings') : localStorage.setItem('totalTrainings', '0');
+                                          if (trainingList.length + parseInt(localStorage.getItem('trainings')) + parseInt(localStorage.getItem('totalTrainings')) < 3) {
                                             trainingList.forEach((training) => {
                                               if (
                                                 training["title"] ===
@@ -293,9 +445,10 @@ export default function StickyHeadTable({
                                               setUniqId(uniqId + 1);
                                             }
                                           } else {
+                                            
                                             setAlertPriority("error");
                                             setAlertMessage(
-                                              "You can only chose 5 trainings"
+                                              localStorage.getItem('totalTrainings') === 0 ? "You can only chose 3 trainings" : "You have already picked " + localStorage.getItem('totalTrainings') + " in you previous session, and you can only choose 3 trainings"
                                             );
                                             setAlertOpen(true);
                                           }
@@ -339,14 +492,14 @@ export default function StickyHeadTable({
             </Paper>
           </div>
           <div className="div2" style={{ minWidth: "35%", maxWidth: "35%" }}>
+            <div className="div3">
             <Divider />
             <div className="div">
               <h2>YOUR TRAININGS LIST</h2>
             </div>
             <Divider />
             <br />
-            <Paper sx={{ overflow: "hidden", minHeight: 495 }}>
-              <div className="trainings" style={{ padding: "5%" }}>
+              <div className="trainings" style={{ minHeight: 250 }}>
                 {trainingList.length > 0 ? (
                   <>
                     <List>
@@ -468,12 +621,143 @@ export default function StickyHeadTable({
                         SUBMIT
                       </LoadingButton>
                     </div>
+                    <br />
+                    <Divider />
                   </>
                 ) : (
                   <h4>No trainings added!</h4>
                 )}
               </div>
-            </Paper>
+
+              <Divider />
+            <div className="div">
+              <h2>OTHER TRAININGS LIST</h2>
+            </div>
+            <Divider />
+            <br />
+              <div className="trainings" style={{ minHeight: 200 }}>
+                {otherTraining.length > 0 ? (
+                  <>
+                    <List>
+                      {otherTraining.map((item) => (
+                        <>
+                          <ListItem key={item.id}>
+                            <ListItemText
+                              sx={{
+                                width: "75%",
+                                fontFamily: "var(--font)",
+                                marginRight: "30px",
+                              }}
+                              primary={item.training_title}
+                              secondary={item.season}
+                            />
+                            <ListItemSecondaryAction>
+                              <>
+                                <IconButton
+                                  edge="end"
+                                  color="error"
+                                  aria-label="delete"
+                                  onClick={() => setOtherTraining([])}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                                
+                              </>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          <Dialog
+                            sx={{ fontFamily: "var(--font)" }}
+                            open={dialogOpen[item.id]}
+                            onClose={handleDialogClose}
+                          >
+                            <DialogTitle sx={{ fontFamily: "var(--font)" }}>
+                              {item.title}
+                            </DialogTitle>
+                            <DialogContent>
+                              <form
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  trainingList.filter(
+                                    (_item) => _item.id === item.id
+                                  )[0]["season"] = seasonNew;
+                                  setTrainingList(trainingList);
+                                  handleDialogClose(item.id);
+                                }}
+                              >
+                                <TextField
+                                  required
+                                  select
+                                  autoFocus
+                                  margin="dense"
+                                  label="Quarter"
+                                  type="text"
+                                  fullWidth
+                                  value={seasonNew}
+                                  onChange={(e) => {
+                                    setSeasonNew(e.target.value);
+                                  }}
+                                >
+                                  {seasons.map((option) => (
+                                    <MenuItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                                <Button
+                                  sx={{
+                                    fontFamily: "var(--font)",
+                                    color: "var(--primary)",
+                                  }}
+                                  type="submit"
+                                >
+                                  Update Quarter
+                                </Button>
+                              </form>
+                            </DialogContent>
+                          </Dialog>
+                        </>
+                      ))}
+                    </List>
+                    <Divider />
+                    <br />
+                    <div
+                      className="saveBtn"
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setOtherTraining([]);
+                        }}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="error"
+                        endIcon={<ClearIcon />}
+                      >
+                        CLEAR
+                      </Button>
+                      <div className="space"></div>
+                      <LoadingButton
+                        loading={submitNewTraining}
+                        onClick={submitOtherTraining}
+                        sx={{ padding: "10px", minWidth: "150px" }}
+                        variant="contained"
+                        color="success"
+                        endIcon={<SaveIcon />}
+                      >
+                        SUBMIT
+                      </LoadingButton>
+                    </div>
+                    <br />
+                    <Divider />
+                  </>
+                ) : (
+                  <h4>No trainings added!</h4>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </>

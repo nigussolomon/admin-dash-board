@@ -10,7 +10,7 @@ import DataTable from "../../components/trainingTable/trainingTable";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import { fetchCategories } from "../../services/api";
-import { filterTraining } from "../../services/api";
+import { filterTraining, filterTraining1 } from "../../services/api";
 import { newTraining } from "../../services/api";
 import { postTraining } from "../../services/api";
 import "./form.css";
@@ -41,6 +41,46 @@ export default function Form() {
   const [alertPriority, setAlertPriority] = useState("error");
   const [alertMessage, setAlertMessage] = useState("");
   const [submitNewTraining, setSubmitNewTraining] = useState(false);
+  const [page, setPage] = useState(0);
+  const [otherTraining, setOtherTraining] = useState([])
+
+  const submitOtherTraining = async () => {
+    const trainingAdded = await newTraining({
+      training_title: customTraining,
+      training_type: categories.filter(
+        (child) => child.value === selection
+      )[0]["label"],
+      category_id: childrenSelection,
+    });
+
+    if (trainingAdded !== null) {
+      await postTraining({
+        training_id: trainingAdded,
+        season: season,
+        employee_id: decodedToken["employee_id"],
+      });
+
+      if (postTraining) {
+        setCustomTrainingsAmount(customTrainingsAmount + 1);
+        localStorage.setItem(
+          "trainings",
+          customTrainingsAmount + 1
+        );
+        setAlertMessage("Training added successfully");
+        setAlertPriority("success");
+        setAlertOpen(true);
+        setSubmitNewTraining(false);
+        setToggleOther('none')
+      } else {
+        setAlertMessage(
+          "Training not added, please try again"
+        );
+        setAlertOpen(true);
+        setSubmitNewTraining(false);
+      }
+    }
+  }
+
 
   function handleClose() {
     setAlertOpen(false);
@@ -51,6 +91,30 @@ export default function Form() {
     const tempTrainings = [];
     console.log(sub);
     const data = await filterTraining(sub);
+
+    await data.forEach((train) => {
+      console.log(train.training_title);
+      tempTrainings.push(
+        createTrainings(
+          train['id'],
+          train["category_id"],
+          train.training_title,
+          "test"
+        )
+      );
+    });
+    await setTrainings(tempTrainings);
+    await setSelectedSeasons(
+      Array.from({ length: tempTrainings.length }, () => "1st Quarter")
+    );
+    setLoading(false);
+  };
+
+  const handleSubmit1 = async (sub) => {
+    setLoading(true);
+    const tempTrainings = [];
+    console.log(sub);
+    const data = await filterTraining1(sub);
 
     await data.forEach((train) => {
       console.log(train.training_title);
@@ -89,8 +153,8 @@ export default function Form() {
         });
       }
     });
-    await setSelection(tempCat[0].value);
-    setChildren(tempChildren);
+    // await setSelection(tempCat[0].value);
+    // setChildren(tempChildren);
     setCategories(tempCat);
   };
 
@@ -104,6 +168,7 @@ export default function Form() {
   };
 
   const categoryChange = async (e) => {
+    setPage(0)
     setToggleOther("none");
     await setSelection(e.target.value);
     const tempChildren = [];
@@ -118,6 +183,7 @@ export default function Form() {
     });
     await setChildren(tempChildren);
     await setChildrenSelection("");
+    await handleSubmit1(e.target.value);
   };
 
   if (fullLoad) {
@@ -195,6 +261,7 @@ export default function Form() {
 
               <TextField
                 onChange={async (e) => {
+                  setPage(0)
                   console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
                   console.log(
@@ -279,39 +346,13 @@ export default function Form() {
                     onClick={async () => {
                       if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
-                        const trainingAdded = await newTraining({
+                        await setOtherTraining([{
                           training_title: customTraining,
-                          training_type: categories.filter(
-                            (child) => child.value === selection
-                          )[0]["label"],
-                          category_id: childrenSelection,
-                        });
-                        if (trainingAdded !== null) {
-                          await postTraining({
-                            training_id: trainingAdded,
-                            season: season,
-                            employee_id: decodedToken["employee_id"],
-                          });
-
-                          if (postTraining) {
-                            setCustomTrainingsAmount(customTrainingsAmount + 1);
-                            localStorage.setItem(
-                              "trainings",
-                              customTrainingsAmount + 1
-                            );
-                            setAlertMessage("Training added successfully");
-                            setAlertPriority("success");
-                            setAlertOpen(true);
-                            setSubmitNewTraining(false);
-                            setToggleOther('none')
-                          } else {
-                            setAlertMessage(
-                              "Training not added, please try again"
-                            );
-                            setAlertOpen(true);
-                            setSubmitNewTraining(false);
-                          }
-                        }
+                          season: season
+                        }])
+                        setSubmitNewTraining(false)
+                        setToggleOther('none')
+                        
                       } else {
                         setAlertMessage("You can add one custom training");
                         setAlertPriority("error");
@@ -324,7 +365,7 @@ export default function Form() {
                     variant="contained"
                     color="success"
                   >
-                    SUBMIT
+                    ADD
                   </LoadingButton>
                 </div>
               </div>
@@ -340,6 +381,12 @@ export default function Form() {
                 selectedSeasons={selectedSeasons}
                 setSelectedSeasons={setSelectedSeasons}
                 customTrainingsAmount={customTrainingsAmount}
+                page={page}
+                setPage={setPage}
+                otherTraining={otherTraining}
+                setOtherTraining={setOtherTraining}
+                submitNewTraining={submitNewTraining}
+                submitOtherTraining={submitOtherTraining}
               ></DataTable>
             </div>
           </Container>

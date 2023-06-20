@@ -16,7 +16,7 @@ import logo_alt from "../../assets/logo_alt.svg";
 import { fetchCategories } from "../../services/api";
 import { adminFilterTraining } from "../../services/api";
 import { fetchEmployees } from "../../services/api";
-import Skeleton from "@mui/material/Skeleton";
+import { writeFile, utils } from "xlsx";
 
 const textStyle = {
   minWidth: "48%",
@@ -43,6 +43,26 @@ export default function Home() {
   const [dept, setDept] = useState("");
   const [uniqDept, setUniqDept] = useState([]);
   const [uniqLoc, setUniqLoc] = useState([]);
+  const [disableExport, setDisableExport] = useState(true);
+
+  const columns = [
+    { id: 'id', label: 'Employee ID', minWidth: 90 },
+    { id: 'name', label: 'Name', minWidth: 170 },
+    { id: 'email', label: 'Email', minWidth: 100 },
+    { id: 'department', label: 'Department', minWidth: 170, },
+    { id: 'region', label: 'Region', minWidth: 170, },
+    { id: 'trainingTitle', label: 'Training Title', minWidth: 170, },
+    { id: 'date', label: 'Date', minWidth: 170, },
+  ];
+
+  function convertToWorkbook(rows, columns) {
+    const worksheet = utils.json_to_sheet(rows);
+    const header = columns.map((c) => c.label);
+    utils.sheet_add_aoa(worksheet, [header], { origin: "A1" });
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    return workbook;
+  }
 
   function extractUniqueDepartments(responses) {
     const uniqueDepartments = [];
@@ -75,26 +95,29 @@ export default function Home() {
   }
 
   function filterData(data, quarter, location, department, category_id) {
-    console.log("ggggggg" + category_id);
-    return data.filter((item) => {
-      if (quarter && item.season !== quarter) {
-        return false;
-      }
-
-      if (location && item.employee.location !== location) {
-        return false;
-      }
-
-      if (department && item.employee.department !== department) {
-        return false;
-      }
-
-      if (category_id && item.training.category_id !== category_id) {
-        return false;
-      }
-
+    if (quarter && location && department && category_id) {
       return true;
-    });
+    } else {
+      return data.filter((item) => {
+        if (quarter && item.season !== quarter) {
+          return false;
+        }
+
+        if (location && item.employee.location !== location) {
+          return false;
+        }
+
+        if (department && item.employee.department !== department) {
+          return false;
+        }
+
+        if (category_id && item.training.category_id !== category_id) {
+          return false;
+        }
+
+        return true;
+      });
+    }
   }
 
   const clear = () => {
@@ -127,6 +150,7 @@ export default function Home() {
   const handleSubmit = async () => {
     setDisable(true);
     setLoading(true);
+    setDisableExport(true)
     const tempTrainings = [];
     const data = await adminFilterTraining("");
     const filteredData = await filterData(
@@ -154,6 +178,7 @@ export default function Home() {
     await setRows(tempTrainings);
     setLoading(false);
     setDisable(false);
+    setDisableExport(false)
   };
 
   const fetchData = async () => {
@@ -177,7 +202,7 @@ export default function Home() {
       }
     });
     await extractUniqueDepartments(emp);
-    await setSelection(tempCat[0].value);
+    // await setSelection(tempCat[0].value);
     setChildren(tempChildren);
     setCategories(tempCat);
   };
@@ -357,11 +382,41 @@ export default function Home() {
           </Container>
         ) : (
           <Container maxWidth="xl">
-            <Divider />
             <div className="dataTable">
-              <h2>TRAINEE LIST</h2>
+            <Divider/>
+              <div
+                className="title"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <h2>TRAINEE LIST</h2>
+                <Button
+                  variant="contained"
+                  disabled={disableExport}
+                  color="success"
+                  sx={{
+                    padding: ".5%",
+                    paddingLeft: "2%",
+                    paddingRight: "2%",
+                    margin: "1%",
+                    marginLeft: 0,
+                    marginRight: 0,
+                  }}
+                  onClick={async () => {
+                    await setDisableExport(true)
+                    const workbook = await convertToWorkbook(rows, columns);
+                    setTimeout(async () => {
+                      await writeFile(workbook, "trainingData.xlsx");
+                      setDisableExport(false)
+                    }, 50);
+                    
+                  }}
+                >
+                  Export to Excel
+                </Button>
+              </div>
               <Divider />
-              <DataTable rows={rows} loading={loading}></DataTable>
+              <br />
+              <DataTable rows={rows} loading={loading} columns={columns}></DataTable>
             </div>
           </Container>
         )}
