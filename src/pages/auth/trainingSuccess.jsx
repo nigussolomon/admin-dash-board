@@ -25,6 +25,7 @@ export default function Block() {
       <h2 style={{ color: "var(--primary)", textAlign: "center",}}>
         You have succesfuly submitted training titles as per your interest <br /> we will contact you soon with the details, thank you!
       </h2>
+      <h3>-Talent Development Directorate</h3>
     </div>
   );
 }

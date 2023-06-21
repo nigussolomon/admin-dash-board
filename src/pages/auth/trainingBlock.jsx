@@ -34,6 +34,7 @@ export default function Block() {
         You have picked the maximum amount of trainings! <br /> please contact
         your local branch adminstrator for more information.
       </h2>
+      <h3>-Talent Development Directorate</h3>
       {decoded.role === "admin" ? (
         <Button
           onClick={() => navigate("/home")}
