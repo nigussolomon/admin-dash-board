@@ -49,8 +49,8 @@ export default function Home() {
     { id: 'id', label: 'Employee ID', minWidth: 90 },
     { id: 'name', label: 'Name', minWidth: 170 },
     { id: 'email', label: 'Email', minWidth: 100 },
-    { id: 'department', label: 'Department', minWidth: 170, },
-    { id: 'region', label: 'Region', minWidth: 170, },
+    { id: 'department', label: 'Job Title', minWidth: 170, },
+    { id: 'region', label: 'Work Unit', minWidth: 170, },
     { id: 'trainingTitle', label: 'Training Title', minWidth: 170, },
     { id: 'date', label: 'Date', minWidth: 170, },
   ];
@@ -121,6 +121,7 @@ export default function Home() {
   }
 
   const clear = () => {
+    setSelection(null)
     setDept(null);
     setRegion(null);
     setSeason(null);
