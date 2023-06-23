@@ -53,7 +53,6 @@ export default function StickyHeadTable({
   setOtherTraining,
   submitOtherTraining,
 }) {
-  console.log("ggggOOO" + otherTraining);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertPriority, setAlertPriority] = useState("error");
@@ -62,10 +61,7 @@ export default function StickyHeadTable({
   const [seasonNew1, setSeasonNew1] = useState(seasons[0].value);
   const [trainingList, setTrainingList] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(
-    Array.from({ length: 5 }, () => false)
-  );
-  const [dialogOpen1, setDialogOpen1] = useState(
-    false
+    Array.from({ length: 3 }, () => false)
   );
   const [uniqId, setUniqId] = useState(0);
   const [submitNewTraining, setSubmitNewTraining] = useState(false);
@@ -78,10 +74,10 @@ export default function StickyHeadTable({
     setDialogOpen(updatedDialogOpen);
     console.log(dialogOpen);
   };
-  console.log(selectedSeasons);
+
   const handleDialogClose = (rowIndex) => {
     const updatedDialogOpen = [...dialogOpen];
-    for (let index = 0; index < 100; index++) {
+    for (let index = 0; index < 10000; index++) {
       updatedDialogOpen[index] = false;
     }
     setDialogOpen(updatedDialogOpen);
@@ -667,8 +663,8 @@ export default function StickyHeadTable({
                           </ListItem>
                           <Dialog
                             sx={{ fontFamily: "var(--font)" }}
-                            open={dialogOpen[item.id]}
-                            onClose={handleDialogClose}
+                            // open={dialogOpen[item.id]}
+                            // onClose={handleDialogClose}
                           >
                             <DialogTitle sx={{ fontFamily: "var(--font)" }}>
                               {item.title}
