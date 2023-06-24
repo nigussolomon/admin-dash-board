@@ -192,6 +192,9 @@ export default function Form() {
       setTimeout(async () => {
         await fetchData();
         setFullLoad(false);
+        if(parseInt(localStorage.getItem("trainings")) === 1 && parseInt(localStorage.getItem('totalTrainings')) !== 0){
+          localStorage.setItem("totalTrainings", parseInt(localStorage.getItem('totalTrainings')) - 1)
+        }
       }, 50),
       (
         <Box
