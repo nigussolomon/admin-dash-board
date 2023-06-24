@@ -622,23 +622,7 @@ export default function StickyHeadTable({
                                           } else {
                                             setAlertPriority("error");
                                             setAlertMessage(
-                                              prevTraining.length === 0
-                                                ? "You can only chose 3 trainings"
-                                                : "You have already picked " +
-                                                    (parseInt(
-                                                      localStorage.getItem(
-                                                        "trainings"
-                                                      )
-                                                    ) === 1
-                                                      ? parseInt(
-                                                          localStorage.getItem(
-                                                            "totalTrainings"
-                                                          )
-                                                        ) - 1
-                                                      : localStorage.getItem(
-                                                          "totalTrainings"
-                                                        )) +
-                                                    " in you previous session, and you can only choose 3 trainings"
+                                              "You can only chose 3 trainings"
                                             );
                                             setAlertOpen(true);
                                           }
