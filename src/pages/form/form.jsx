@@ -45,6 +45,7 @@ export default function Form() {
   const [otherTraining, setOtherTraining] = useState([])
 
   const submitOtherTraining = async () => {
+    setSubmitNewTraining(true)
     const trainingAdded = await newTraining({
       training_title: customTraining,
       training_type: categories.filter(
@@ -346,6 +347,7 @@ export default function Form() {
                     onClick={async () => {
                       if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
+                        await submitOtherTraining()
                         await setOtherTraining([{
                           training_title: customTraining,
                           season: season
@@ -387,6 +389,7 @@ export default function Form() {
                 setOtherTraining={setOtherTraining}
                 submitNewTraining={submitNewTraining}
                 submitOtherTraining={submitOtherTraining}
+                setCustomTrainingsAmount={setCustomTrainingsAmount}
               ></DataTable>
             </div>
           </Container>

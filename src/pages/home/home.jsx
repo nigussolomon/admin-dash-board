@@ -52,7 +52,7 @@ export default function Home() {
     { id: 'department', label: 'Job Title', minWidth: 170, },
     { id: 'region', label: 'Work Unit', minWidth: 170, },
     { id: 'trainingTitle', label: 'Training Title', minWidth: 170, },
-    { id: 'date', label: 'Date', minWidth: 170, },
+    { id: 'date', label: 'Quarter', minWidth: 170, },
   ];
 
   function convertToWorkbook(rows, columns) {
