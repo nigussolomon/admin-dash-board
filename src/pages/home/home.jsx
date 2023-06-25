@@ -317,8 +317,8 @@ export default function Home() {
               select
               value={region}
               defaultValue={null}
-              label="REGION"
-              helperText="Please select a region"
+              label="WORK UNIT"
+              helperText="Please select a work unit"
             >
               {uniqLoc.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -338,8 +338,8 @@ export default function Home() {
               select
               value={dept}
               defaultValue={null}
-              label="DEPARTMENT"
-              helperText="Please select a department"
+              label="JOB TITLE"
+              helperText="Please select a jobtitle"
             >
               {uniqDept.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

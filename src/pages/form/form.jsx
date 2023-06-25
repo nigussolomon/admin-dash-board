@@ -46,39 +46,49 @@ export default function Form() {
 
   const submitOtherTraining = async () => {
     setSubmitNewTraining(true)
-    const trainingAdded = await newTraining({
-      training_title: customTraining,
-      training_type: categories.filter(
-        (child) => child.value === selection
-      )[0]["label"],
-      category_id: childrenSelection,
-    });
-
-    if (trainingAdded !== null) {
-      await postTraining({
-        training_id: trainingAdded,
-        season: season,
-        employee_id: decodedToken["employee_id"],
+    if (parseInt(localStorage.getItem("totalTrainings")) < 3){
+      const trainingAdded = await newTraining({
+        training_title: customTraining,
+        training_type: categories.filter(
+          (child) => child.value === selection
+        )[0]["label"],
+        category_id: childrenSelection,
       });
-
-      if (postTraining) {
-        setCustomTrainingsAmount(customTrainingsAmount + 1);
-        localStorage.setItem(
-          "trainings",
-          customTrainingsAmount + 1
-        );
-        setAlertMessage("Training added successfully");
-        setAlertPriority("success");
-        setAlertOpen(true);
-        setSubmitNewTraining(false);
-        setToggleOther('none')
-      } else {
-        setAlertMessage(
-          "Training not added, please try again"
-        );
-        setAlertOpen(true);
-        setSubmitNewTraining(false);
+  
+      if (trainingAdded !== null) {
+        await postTraining({
+          training_id: trainingAdded,
+          season: season,
+          employee_id: decodedToken["employee_id"],
+        });
+  
+        if (postTraining) {
+          setCustomTrainingsAmount(customTrainingsAmount + 1);
+          localStorage.setItem(
+            "trainings",
+            customTrainingsAmount + 1
+          );
+          setAlertMessage("Training added successfully");
+          setAlertPriority("success");
+          setAlertOpen(true);
+          setSubmitNewTraining(false);
+          setToggleOther('none')
+        } else {
+          setAlertMessage(
+            "Training not added, please try again"
+          );
+          setAlertOpen(true);
+          setSubmitNewTraining(false);
+        }
       }
+    } else {
+      setOtherTraining([])
+      setAlertPriority("error")
+      setAlertMessage(
+        "You have already chosen 3 trainings please delete one to add your own custom training"
+      );
+      setAlertOpen(true);
+      setSubmitNewTraining(false);
     }
   }
 
@@ -192,9 +202,9 @@ export default function Form() {
       setTimeout(async () => {
         await fetchData();
         setFullLoad(false);
-        if(parseInt(localStorage.getItem("trainings")) === 1 && parseInt(localStorage.getItem('totalTrainings')) !== 0){
-          localStorage.setItem("totalTrainings", parseInt(localStorage.getItem('totalTrainings')) - 1)
-        }
+        // if(parseInt(localStorage.getItem("trainings")) === 1 && parseInt(localStorage.getItem('totalTrainings')) !== 0){
+        //   localStorage.setItem("totalTrainings", parseInt(localStorage.getItem('totalTrainings')) - 1)
+        // }
       }, 50),
       (
         <Box
@@ -350,20 +360,18 @@ export default function Form() {
                     onClick={async () => {
                       if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
-                        await submitOtherTraining()
                         await setOtherTraining([{
                           training_title: customTraining,
                           season: season
                         }])
+                        await submitOtherTraining()
                         setSubmitNewTraining(false)
-                        setToggleOther('none')
                         
                       } else {
                         setAlertMessage("You can add one custom training");
                         setAlertPriority("error");
                         setAlertOpen(true);
                         setSubmitNewTraining(false);
-                        setToggleOther('none')
                       }
                     }}
                     sx={{ padding: "14px", minWidth: "120px" }}

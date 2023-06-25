@@ -84,9 +84,46 @@ export default function Block() {
               src={logo_alt}
               alt="logo_alt"
             />
-            <h2 style={{ color: "var(--primary)", textAlign: "center" }}>
-              You have picked the maximum amount of trainings! <br /> please
-              contact your local branch adminstrator for more information.
+            <div className="trainings">
+              <Box
+                sx={{
+                  marginTop: "2vh",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                {data.length > 0 ? (
+                  <>
+                    <h2>{decoded["name"]}'s Training List</h2>
+                    <Divider />
+                    <List>
+                      {data.map((item) => (
+                        <>
+                          <ListItem key={item.id}>
+                            <ListItemText
+                              sx={{
+                                fontFamily: "var(--font)",
+                                fontSize: "150px",
+                                textAlign: "center",
+                              }}
+                              primary={item.training.training_title}
+                              secondary={item.season}
+                            />
+                          </ListItem>
+                          <Divider />
+                        </>
+                      ))}
+                    </List>
+                  </>
+                ) : null}
+              </Box>
+            </div>
+            <h2 style={{ textAlign: "center", color: "red", fontWeight: "400", fontSize: "18px" }}>
+              MAXIMUM TRAINING LIMIT REACHED! <br /> <span style={{color: "gray", fontSize: "18px"}}>Please
+              contact your local branch adminstrator for more information.</span>
             </h2>
             <h3>-Talent Development Directorate</h3>
             {decoded.role === "admin" ? (
@@ -106,44 +143,6 @@ export default function Block() {
                 DASHBOARD
               </Button>
             ) : null}
-          </div>
-
-          <div className="trainings">
-            <Box
-              sx={{
-                marginTop: "5vh",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-              }}
-            >
-              {data.length > 0 ? (
-                <>
-                  <h2>{decoded["name"]}'s Training List</h2>
-                  <Divider />
-                  <List>
-                    {data.map((item) => (
-                      <>
-                        <ListItem key={item.id}>
-                          <ListItemText
-                            sx={{
-                              fontFamily: "var(--font)",
-                              fontSize: "150px",
-                              textAlign: "center",
-                            }}
-                            primary={item.training.training_title}
-                            secondary={item.season}
-                          />
-                        </ListItem>
-                        <Divider />
-                      </>
-                    ))}
-                  </List>
-                </>
-              ) : null}
-            </Box>
           </div>
         </>
       </div>
