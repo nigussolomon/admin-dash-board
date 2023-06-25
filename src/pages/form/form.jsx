@@ -77,12 +77,14 @@ export default function Form() {
             "totalTrainings",
             parseInt(localStorage.getItem("totalTrainings") + 1)
           );
+          return true;
         } else {
           setAlertMessage(
             "Training not added, please try again"
           );
           setAlertOpen(true);
           setSubmitNewTraining(false);
+          return false;
         }
       }
     } else {
@@ -364,11 +366,13 @@ export default function Form() {
                     onClick={async () => {
                       if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
-                        await setOtherTraining([{
-                          training_title: customTraining,
-                          season: season
-                        }])
-                        await submitOtherTraining()
+                        const pass = await submitOtherTraining()
+                        if(pass){
+                          await setOtherTraining([{
+                            training_title: customTraining,
+                            season: season
+                          }])
+                        }
                         setSubmitNewTraining(false)
                         
                       } else {

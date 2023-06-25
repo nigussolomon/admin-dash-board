@@ -852,6 +852,7 @@ export default function StickyHeadTable({
                                     );
                                     if (pass) {
                                       setOtherTraining([]);
+                                      localStorage.setItem("totalTrainings", parseInt(localStorage.getItem("totalTrainings") - 1))
                                       localStorage.setItem("trainings", 0);
                                       setDeleteOther(false);
                                       setCustomTrainingsAmount(0);
