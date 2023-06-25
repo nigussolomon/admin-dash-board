@@ -71,7 +71,7 @@ export default function Form() {
           setToggleOther('none')
           localStorage.setItem(
             "totalTrainings",
-            parseInt(localStorage.getItem("totalTrainings") + 1)
+            parseInt(localStorage.getItem("totalTrainings")) + 1
           );
           return true;
         } else {
