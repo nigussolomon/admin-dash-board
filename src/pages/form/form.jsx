@@ -64,10 +64,6 @@ export default function Form() {
   
         if (postTraining) {
           setCustomTrainingsAmount(customTrainingsAmount + 1);
-          localStorage.setItem(
-            "trainings",
-            customTrainingsAmount + 1
-          );
           setAlertMessage("Training added successfully");
           setAlertPriority("success");
           setAlertOpen(true);
