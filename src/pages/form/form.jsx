@@ -73,6 +73,10 @@ export default function Form() {
           setAlertOpen(true);
           setSubmitNewTraining(false);
           setToggleOther('none')
+          localStorage.setItem(
+            "totalTrainings",
+            parseInt(localStorage.getItem("totalTrainings") + 1)
+          );
         } else {
           setAlertMessage(
             "Training not added, please try again"
