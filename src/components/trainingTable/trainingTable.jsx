@@ -158,6 +158,9 @@ export default function StickyHeadTable({
   if (loading) {
     setTimeout(async () => {
       await getEmployeeTrainings();
+      if (parseInt(localStorage.getItem("totalTrainings") === 0)) {
+        localStorage.setItem("trainings", 0)
+      }
     }, 0);
     return (
       <div
