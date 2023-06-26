@@ -79,7 +79,6 @@ export default function StickyHeadTable({
     const updatedDialogOpen = [...dialogOpen];
     updatedDialogOpen[rowIndex] = true;
     setDialogOpen(updatedDialogOpen);
-    console.log(dialogOpen);
   };
 
   const handleDialogClose = (rowIndex) => {
@@ -575,10 +574,6 @@ export default function StickyHeadTable({
                                                 row["title"] ===
                                                 element.training.training_title
                                               ) {
-                                                console.log(
-                                                  element.training
-                                                    .training_title
-                                                );
                                                 pass = false;
                                                 setAlertPriority("error");
                                                 setAlertMessage(
@@ -601,7 +596,6 @@ export default function StickyHeadTable({
                                               }
                                             });
                                             if (pass) {
-                                              console.log(row);
                                               trainingList.push({
                                                 id: row["id"],
                                                 training_id: row["id"],
@@ -610,7 +604,6 @@ export default function StickyHeadTable({
                                                 employee_id:
                                                   decodedToken["employee_id"],
                                               });
-                                              console.log(trainingList);
                                               localStorage.setItem(
                                                 "totalTrainings",
                                                 parseInt(

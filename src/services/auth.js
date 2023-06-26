@@ -22,12 +22,10 @@ async function canApply() {
   );
 
   localStorage.setItem("totalTrainings", pass.length)
-  console.log("gggg "+pass);
   if (pass.length >= 3 ) {
     return false;
   } else {
     localStorage.setItem("totalTrainings", pass.length)
-    console.log("gggg "+pass);
     return true;
   }
 }

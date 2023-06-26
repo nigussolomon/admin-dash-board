@@ -24,7 +24,6 @@ export const fetchEmployees = async () => {
 };
 
 export const filterTraining = async (id) => {
-  console.log("please help me!");
   const response = await fetch(
     api_link+"/trainings?q[category_id_eq]=" + id,
     {
@@ -36,12 +35,10 @@ export const filterTraining = async (id) => {
     }
   );
   const jsonData = await response.json();
-  console.log(jsonData);
   return jsonData;
 };
 
 export const filterTraining1 = async (id) => {
-  console.log("please help me!");
   const response = await fetch(
     api_link+"/trainings?q[parent_category_eq]=" + id,
     {
@@ -53,12 +50,10 @@ export const filterTraining1 = async (id) => {
     }
   );
   const jsonData = await response.json();
-  console.log(jsonData);
   return jsonData;
 };
 
 export const adminFilterTraining = async (filters) => {
-  console.log("please help me!");
   const response = await fetch(
     api_link+"/employee_trainings?"+filters,
     {
@@ -74,7 +69,6 @@ export const adminFilterTraining = async (filters) => {
 };
 
 export const deleteTraining = async (id) => {
-  console.log("please help me!");
   const response = await fetch(
     api_link+"/employee_trainings/"+id,
     {
@@ -86,7 +80,6 @@ export const deleteTraining = async (id) => {
     }
   );
   // const jsonData = await response.json();
-  console.log(response.status);
   if (response.status === 204){
     return true
   }

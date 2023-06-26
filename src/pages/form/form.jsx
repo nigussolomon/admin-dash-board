@@ -102,11 +102,9 @@ export default function Form() {
   const handleSubmit = async (sub) => {
     setLoading(true);
     const tempTrainings = [];
-    console.log(sub);
     const data = await filterTraining(sub);
 
     await data.forEach((train) => {
-      console.log(train.training_title);
       tempTrainings.push(
         createTrainings(
           train['id'],
@@ -126,11 +124,9 @@ export default function Form() {
   const handleSubmit1 = async (sub) => {
     setLoading(true);
     const tempTrainings = [];
-    console.log(sub);
     const data = await filterTraining1(sub);
 
     await data.forEach((train) => {
-      console.log(train.training_title);
       tempTrainings.push(
         createTrainings(
           train['id'],
@@ -186,7 +182,6 @@ export default function Form() {
     await setSelection(e.target.value);
     const tempChildren = [];
     await CATEGORY.forEach((cat) => {
-      console.log(cat.ancestry === e.target.value.toString());
       if (cat.ancestry === e.target.value.toString()) {
         tempChildren.push({
           value: cat.id,
@@ -278,11 +273,7 @@ export default function Form() {
               <TextField
                 onChange={async (e) => {
                   setPage(0)
-                  console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
-                  console.log(
-                    children.filter((child) => child.value === e.target.value)
-                  );
                   if (
                     children.filter(
                       (child) => child.value === e.target.value

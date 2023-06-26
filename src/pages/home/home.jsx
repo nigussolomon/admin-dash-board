@@ -127,16 +127,12 @@ export default function Home() {
     setSeason(null);
     setChildrenSelection(null);
     setRows([]);
-
-    console.log(region);
-    console.log(dept);
   };
 
   const categoryChange = async (e) => {
     await setSelection(e.target.value);
     const tempChildren = [];
     await CATEGORY.forEach((cat) => {
-      console.log(cat.ancestry === e.target.value.toString());
       if (cat.ancestry === e.target.value.toString()) {
         tempChildren.push({
           value: cat.id,
@@ -163,7 +159,6 @@ export default function Home() {
     );
 
     await filteredData.forEach((train) => {
-      console.log(train);
       tempTrainings.push(
         createData(
           train["employee"]["id"],
@@ -266,7 +261,6 @@ export default function Home() {
 
             <TextField
               onChange={async (e) => {
-                console.log(e.target.value);
                 await setChildrenSelection(e.target.value);
               }}
               sx={textStyle}
