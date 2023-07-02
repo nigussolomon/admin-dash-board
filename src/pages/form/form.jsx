@@ -45,39 +45,52 @@ export default function Form() {
   const [otherTraining, setOtherTraining] = useState([])
 
   const submitOtherTraining = async () => {
-    const trainingAdded = await newTraining({
-      training_title: customTraining,
-      training_type: categories.filter(
-        (child) => child.value === selection
-      )[0]["label"],
-      category_id: childrenSelection,
-    });
-
-    if (trainingAdded !== null) {
-      await postTraining({
-        training_id: trainingAdded,
-        season: season,
-        employee_id: decodedToken["employee_id"],
+    setSubmitNewTraining(true)
+    if (parseInt(localStorage.getItem("totalTrainings")) < 3){
+      const trainingAdded = await newTraining({
+        training_title: customTraining,
+        training_type: categories.filter(
+          (child) => child.value === selection
+        )[0]["label"],
+        category_id: childrenSelection,
       });
-
-      if (postTraining) {
-        setCustomTrainingsAmount(customTrainingsAmount + 1);
-        localStorage.setItem(
-          "trainings",
-          customTrainingsAmount + 1
-        );
-        setAlertMessage("Training added successfully");
-        setAlertPriority("success");
-        setAlertOpen(true);
-        setSubmitNewTraining(false);
-        setToggleOther('none')
-      } else {
-        setAlertMessage(
-          "Training not added, please try again"
-        );
-        setAlertOpen(true);
-        setSubmitNewTraining(false);
+  
+      if (trainingAdded !== null) {
+        await postTraining({
+          training_id: trainingAdded,
+          season: season,
+          employee_id: decodedToken["employee_id"],
+        });
+  
+        if (postTraining) {
+          setCustomTrainingsAmount(customTrainingsAmount + 1);
+          setAlertMessage("Training added successfully");
+          setAlertPriority("success");
+          setAlertOpen(true);
+          setSubmitNewTraining(false);
+          setToggleOther('none')
+          localStorage.setItem(
+            "totalTrainings",
+            parseInt(localStorage.getItem("totalTrainings")) + 1
+          );
+          return true;
+        } else {
+          setAlertMessage(
+            "Training not added, please try again"
+          );
+          setAlertOpen(true);
+          setSubmitNewTraining(false);
+          return false;
+        }
       }
+    } else {
+      setOtherTraining([])
+      setAlertPriority("error")
+      setAlertMessage(
+        "You have already chosen 3 trainings please delete one to add your own custom training"
+      );
+      setAlertOpen(true);
+      setSubmitNewTraining(false);
     }
   }
 
@@ -89,11 +102,9 @@ export default function Form() {
   const handleSubmit = async (sub) => {
     setLoading(true);
     const tempTrainings = [];
-    console.log(sub);
     const data = await filterTraining(sub);
 
     await data.forEach((train) => {
-      console.log(train.training_title);
       tempTrainings.push(
         createTrainings(
           train['id'],
@@ -113,11 +124,9 @@ export default function Form() {
   const handleSubmit1 = async (sub) => {
     setLoading(true);
     const tempTrainings = [];
-    console.log(sub);
     const data = await filterTraining1(sub);
 
     await data.forEach((train) => {
-      console.log(train.training_title);
       tempTrainings.push(
         createTrainings(
           train['id'],
@@ -173,7 +182,6 @@ export default function Form() {
     await setSelection(e.target.value);
     const tempChildren = [];
     await CATEGORY.forEach((cat) => {
-      console.log(cat.ancestry === e.target.value.toString());
       if (cat.ancestry === e.target.value.toString()) {
         tempChildren.push({
           value: cat.id,
@@ -191,6 +199,9 @@ export default function Form() {
       setTimeout(async () => {
         await fetchData();
         setFullLoad(false);
+        // if(parseInt(localStorage.getItem("trainings")) === 1 && parseInt(localStorage.getItem('totalTrainings')) !== 0){
+        //   localStorage.setItem("totalTrainings", parseInt(localStorage.getItem('totalTrainings')) - 1)
+        // }
       }, 50),
       (
         <Box
@@ -262,11 +273,7 @@ export default function Form() {
               <TextField
                 onChange={async (e) => {
                   setPage(0)
-                  console.log(e.target.value);
                   await setChildrenSelection(e.target.value);
-                  console.log(
-                    children.filter((child) => child.value === e.target.value)
-                  );
                   if (
                     children.filter(
                       (child) => child.value === e.target.value
@@ -346,19 +353,20 @@ export default function Form() {
                     onClick={async () => {
                       if (customTrainingsAmount < 1) {
                         setSubmitNewTraining(true);
-                        await setOtherTraining([{
-                          training_title: customTraining,
-                          season: season
-                        }])
+                        const pass = await submitOtherTraining()
+                        if(pass){
+                          await setOtherTraining([{
+                            training_title: customTraining,
+                            season: season
+                          }])
+                        }
                         setSubmitNewTraining(false)
-                        setToggleOther('none')
                         
                       } else {
                         setAlertMessage("You can add one custom training");
                         setAlertPriority("error");
                         setAlertOpen(true);
                         setSubmitNewTraining(false);
-                        setToggleOther('none')
                       }
                     }}
                     sx={{ padding: "14px", minWidth: "120px" }}
@@ -387,6 +395,7 @@ export default function Form() {
                 setOtherTraining={setOtherTraining}
                 submitNewTraining={submitNewTraining}
                 submitOtherTraining={submitOtherTraining}
+                setCustomTrainingsAmount={setCustomTrainingsAmount}
               ></DataTable>
             </div>
           </Container>

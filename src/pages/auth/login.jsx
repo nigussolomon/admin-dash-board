@@ -48,7 +48,6 @@ export default function LoginScreen() {
     setLoad(true);
     setAlertOpen(false);
     const yes = await authenticate(email);
-    console.log(yes);
     if (yes === true) {
       localStorage.setItem("tempEmail", email);
       setDisabled(true);

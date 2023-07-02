@@ -52,7 +52,7 @@ export default function Home() {
     { id: 'department', label: 'Job Title', minWidth: 170, },
     { id: 'region', label: 'Work Unit', minWidth: 170, },
     { id: 'trainingTitle', label: 'Training Title', minWidth: 170, },
-    { id: 'date', label: 'Date', minWidth: 170, },
+    { id: 'date', label: 'Quarter', minWidth: 170, },
   ];
 
   function convertToWorkbook(rows, columns) {
@@ -127,16 +127,12 @@ export default function Home() {
     setSeason(null);
     setChildrenSelection(null);
     setRows([]);
-
-    console.log(region);
-    console.log(dept);
   };
 
   const categoryChange = async (e) => {
     await setSelection(e.target.value);
     const tempChildren = [];
     await CATEGORY.forEach((cat) => {
-      console.log(cat.ancestry === e.target.value.toString());
       if (cat.ancestry === e.target.value.toString()) {
         tempChildren.push({
           value: cat.id,
@@ -163,7 +159,6 @@ export default function Home() {
     );
 
     await filteredData.forEach((train) => {
-      console.log(train);
       tempTrainings.push(
         createData(
           train["employee"]["id"],
@@ -266,7 +261,6 @@ export default function Home() {
 
             <TextField
               onChange={async (e) => {
-                console.log(e.target.value);
                 await setChildrenSelection(e.target.value);
               }}
               sx={textStyle}
@@ -317,8 +311,8 @@ export default function Home() {
               select
               value={region}
               defaultValue={null}
-              label="REGION"
-              helperText="Please select a region"
+              label="WORK UNIT"
+              helperText="Please select a work unit"
             >
               {uniqLoc.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -338,8 +332,8 @@ export default function Home() {
               select
               value={dept}
               defaultValue={null}
-              label="DEPARTMENT"
-              helperText="Please select a department"
+              label="JOB TITLE"
+              helperText="Please select a jobtitle"
             >
               {uniqDept.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
